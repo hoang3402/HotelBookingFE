@@ -31,7 +31,6 @@ const SearchModal = () => {
   const [location, setLocation] = useState<CountrySelectValue>();
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
-  const [bathroomCount, setBathroomCount] = useState(1);
   const [dateRange, setDateRange] = useState<Range>({
     startDate: new Date(),
     endDate: new Date(),
@@ -66,7 +65,6 @@ const SearchModal = () => {
         locationValue: location?.value,
         guestCount,
         roomCount,
-        bathroomCount
       };
 
       if (dateRange.startDate) {
@@ -95,7 +93,6 @@ const SearchModal = () => {
       roomCount,
       dateRange,
       onNext,
-      bathroomCount,
       params
     ]);
 
@@ -165,15 +162,6 @@ const SearchModal = () => {
           value={roomCount}
           title="Rooms"
           subtitle="How many rooms do you need?"
-        />
-        <hr/>
-        <Counter
-          onChange={(value) => {
-            setBathroomCount(value)
-          }}
-          value={bathroomCount}
-          title="Bathrooms"
-          subtitle="How many bahtrooms do you need?"
         />
       </div>
     )

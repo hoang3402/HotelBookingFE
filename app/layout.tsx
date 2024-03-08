@@ -7,6 +7,7 @@ import Navbar from "@/app/components/navbar/Navbar";
 import SearchModal from "@/app/components/modals/SearchModal";
 import LoginModal from "@/app/components/modals/LoginModal";
 import RegisterModal from "@/app/components/modals/RegisterModal";
+import RoomModal from "@/app/components/modals/RoomModal";
 
 export const metadata = {
   title: 'Hotel booking',
@@ -30,9 +31,12 @@ export default function RootLayout({
       <SearchModal/>
       <LoginModal/>
       <RegisterModal/>
+      <RoomModal/>
       <Navbar/>
     </ClientOnly>
-    {children}
+    <div className={'pb-20 pt-28'}>
+      {children}
+    </div>
     </body>
     </html>
   );
