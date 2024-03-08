@@ -11,7 +11,7 @@ export default async function getRoomById(
     if (!roomId) {
       return null;
     }
-
+    
     return fetch(`${process.env.API_URL}api/room/${roomId}/`, {
       method: "GET",
       headers: {

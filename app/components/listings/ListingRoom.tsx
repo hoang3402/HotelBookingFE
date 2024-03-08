@@ -45,19 +45,19 @@ interface ListingRoomProps {
 }
 
 export const ListingRoom: React.FC<ListingRoomProps> = ({rooms, currency}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const roomModal = useRoomModal();
+  const roomModal = useRoomModal()
 
-  const toggleOpen = useCallback(() => {
-    setIsOpen((value) => !value);
-  }, []);
+  function handleClick(roomId: any) {
+    roomModal.setRoomId(roomId)
+    roomModal.onOpen()
+  }
 
   return (
     <div className={'flex flex-col gap-3'}>
       {rooms.map((room: any) => (
         <div
           key={room.id}
-          onClick={roomModal.onOpen}
+          onClick={() => handleClick(room.id)}
         >
           <ListingCardRoom room={room} currency={currency}/>
         </div>
