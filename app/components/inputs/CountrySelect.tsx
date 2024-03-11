@@ -2,62 +2,76 @@
 
 import Select from 'react-select'
 
-import useCountries from '@/app/hooks/useCountries';
 import React from "react";
+import {useLocation} from "@/app/hooks/useCountries";
 
-export type CountrySelectValue = {
-  flag: string;
-  label: string;
-  latlng: number[],
-  region: string;
-  value: string
-}
+const formatSelectCountry = (option: any) => (
+  <div className="flex flex-row items-center gap-3">
+    <div>
+      {option.code},
+      <span className="text-neutral-500 ml-1">
+        {option.name}
+      </span>
+    </div>
+  </div>
+)
 
-interface CountrySelectProps {
-  value?: CountrySelectValue;
-  onChange: (value: CountrySelectValue) => void;
-}
-
-const CountrySelect: React.FC<CountrySelectProps> = ({
-                                                       value,
-                                                       onChange
-                                                     }) => {
-  const {getAll} = useCountries();
+const CountrySelect = ({
+                         valueCountry,
+                         onChangeCountry,
+                         valueProvince,
+                         onChangeProvince,
+                         valueCity,
+                         onChangeCity
+                       }: {
+  valueCountry?: any;
+  onChangeCountry: (value: any) => void;
+  valueProvince?: any;
+  onChangeProvince: (value: any) => void;
+  valueCity?: any;
+  onChangeCity: (value: any) => void;
+}) => {
+  const {getAll, getProvinceByCountry, getCityByProvince} = useLocation();
 
   return (
     <div>
       <Select
-        placeholder="Anywhere"
+        placeholder="Country"
         isClearable
         options={getAll()}
-        value={value}
-        onChange={(value) => onChange(value as CountrySelectValue)}
+        value={valueCountry}
+        onChange={(value) => onChangeCountry(value)}
+        formatOptionLabel={formatSelectCountry}
+      />
+
+      <Select
+        placeholder="Province"
+        isClearable
+        options={valueCountry ? getProvinceByCountry(valueCountry.code) : []}
+        value={valueProvince}
+        onChange={(value) => onChangeProvince(value)}
         formatOptionLabel={(option: any) => (
-          <div className="
-          flex flex-row items-center gap-3">
-            <div>{option.flag}</div>
+          <div className="flex flex-row items-center gap-3">
             <div>
-              {option.label},
-              <span className="text-neutral-500 ml-1">
-                {option.region}
-              </span>
+              {option.name}
             </div>
           </div>
         )}
-        classNames={{
-          control: () => 'p-3 border-2',
-          input: () => 'text-lg',
-          option: () => 'text-lg'
-        }}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: 6,
-          colors: {
-            ...theme.colors,
-            primary: 'black',
-            primary25: '#ffe4e6'
-          }
-        })}
+      />
+
+      <Select
+        placeholder="City"
+        isClearable
+        options={valueProvince ? getCityByProvince(valueProvince.id) : []}
+        value={valueCity}
+        onChange={(value) => onChangeCity(value)}
+        formatOptionLabel={(option: any) => (
+          <div className="flex flex-row items-center gap-3">
+            <div>
+              {option.name}
+            </div>
+          </div>
+        )}
       />
     </div>
   );

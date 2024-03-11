@@ -1,3 +1,5 @@
+export const domain = 'https://hotel-tma.zeabur.app/'
+
 interface IParams {
   roomId?: string;
 }
@@ -11,8 +13,8 @@ export default async function getRoomById(
     if (!roomId) {
       return null;
     }
-    
-    return fetch(`${process.env.API_URL}api/room/${roomId}/`, {
+
+    return fetch(`${domain}api/room/${roomId}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

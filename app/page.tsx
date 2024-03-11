@@ -14,6 +14,9 @@ const Home = async ({searchParams}: HomeProps) => {
   return (
     <ClientOnly>
       <Container>
+        <div className={'w-full flex justify-end font-bold text-xl'}>
+          Number hotel available: {listings?.numbers}
+        </div>
         <div
           className="
             pt-24
@@ -27,7 +30,7 @@ const Home = async ({searchParams}: HomeProps) => {
             gap-8
           "
         >
-          {listings.map((listing: any) => (
+          {listings?.hotels?.map((listing: any) => (
             <ListingCard
               currentUser={null}
               key={listing.id}

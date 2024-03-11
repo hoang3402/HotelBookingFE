@@ -1,3 +1,5 @@
+import {domain} from "@/app/actions/getRoomById";
+
 interface IParams {
   hotelId?: string;
 }
@@ -12,7 +14,7 @@ export default async function getHotelById(
       return null;
     }
 
-    return fetch(`${process.env.API_URL}api/hotel/${hotelId}/`, {
+    return fetch(`${domain}api/hotel/${hotelId}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -2,17 +2,16 @@
 
 import useRoomModal from "@/app/hooks/useRoomModal";
 import Image from "next/image"
-import React, {useCallback, useState} from "react"
+import React from "react"
 
 interface listingCardRoomProps {
-  room: any,
-  currency: string
+  room: any
 }
 
-const ListingCardRoom: React.FC<listingCardRoomProps> = ({room, currency}) => {
+const ListingCardRoom: React.FC<listingCardRoomProps> = ({room}) => {
   const formattedPrice = (room?.price / 1).toLocaleString('en-US', {
     style: 'currency',
-    currency: currency,
+    currency: room.hotel.province.country.currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
@@ -40,11 +39,10 @@ const ListingCardRoom: React.FC<listingCardRoomProps> = ({room, currency}) => {
 }
 
 interface ListingRoomProps {
-  rooms: any,
-  currency: string
+  rooms: any
 }
 
-export const ListingRoom: React.FC<ListingRoomProps> = ({rooms, currency}) => {
+export const ListingRoom: React.FC<ListingRoomProps> = ({rooms}) => {
   const roomModal = useRoomModal()
 
   function handleClick(roomId: any) {
@@ -59,7 +57,7 @@ export const ListingRoom: React.FC<ListingRoomProps> = ({rooms, currency}) => {
           key={room.id}
           onClick={() => handleClick(room.id)}
         >
-          <ListingCardRoom room={room} currency={currency}/>
+          <ListingCardRoom room={room}/>
         </div>
       ))}
     </div>

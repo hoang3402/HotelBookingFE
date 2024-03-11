@@ -1,18 +1,15 @@
 'use client';
 
 import qs from 'query-string';
-import dynamic from 'next/dynamic'
-import {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {Range} from 'react-date-range';
-import {formatISO} from 'date-fns';
 import {useRouter, useSearchParams} from 'next/navigation';
-
 import useSearchModal from "@/app/hooks/useSearchModal";
 
 import Modal from "./Modal";
 import Calendar from "../inputs/Calendar";
 import Counter from "../inputs/Counter";
-import CountrySelect, {CountrySelectValue} from "../inputs/CountrySelect";
+import CountrySelect from "../inputs/CountrySelect";
 import Heading from '../Heading';
 
 enum STEPS {
@@ -28,7 +25,9 @@ const SearchModal = () => {
 
   const [step, setStep] = useState(STEPS.LOCATION);
 
-  const [location, setLocation] = useState<CountrySelectValue>();
+  const [country, setCountry] = useState<any>();
+  const [province, setProvince] = useState<any>();
+  const [city, setCity] = useState<any>();
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
   const [dateRange, setDateRange] = useState<Range>({
@@ -36,10 +35,6 @@ const SearchModal = () => {
     endDate: new Date(),
     key: 'selection'
   });
-
-  const Map = useMemo(() => dynamic(() => import('../Map'), {
-    ssr: false
-  }), [location]);
 
   const onBack = useCallback(() => {
     setStep((value) => value - 1);
@@ -62,17 +57,19 @@ const SearchModal = () => {
 
       const updatedQuery: any = {
         ...currentQuery,
-        locationValue: location?.value,
+        locationValue: country?.code,
         guestCount,
         roomCount,
       };
 
       if (dateRange.startDate) {
-        updatedQuery.startDate = formatISO(dateRange.startDate);
+        // updatedQuery.startDate = formatISO(dateRange.startDate);
+        updatedQuery.startDate = dateRange.startDate.toISOString().split('T')[0];
       }
 
       if (dateRange.endDate) {
-        updatedQuery.endDate = formatISO(dateRange.endDate);
+        // updatedQuery.endDate = formatISO(dateRange.endDate);
+        updatedQuery.endDate = dateRange.endDate.toISOString().split('T')[0];
       }
 
       const url = qs.stringifyUrl({
@@ -87,7 +84,7 @@ const SearchModal = () => {
     [
       step,
       searchModal,
-      location,
+      country,
       router,
       guestCount,
       roomCount,
@@ -119,12 +116,16 @@ const SearchModal = () => {
         subtitle="Find the perfect location!"
       />
       <CountrySelect
-        value={location}
-        onChange={(value) =>
-          setLocation(value as CountrySelectValue)}
+        valueCountry={country}
+        onChangeCountry={(value) =>
+          setCountry(value)}
+        valueProvince={province}
+        onChangeProvince={(value) =>
+          setProvince(value)}
+        valueCity={city}
+        onChangeCity={(value) =>
+          setCity(value)}
       />
-      <hr/>
-      <Map center={location?.latlng}/>
     </div>
   )
 

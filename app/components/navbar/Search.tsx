@@ -6,12 +6,12 @@ import {BiSearch} from 'react-icons/bi';
 import {differenceInDays} from 'date-fns';
 
 import useSearchModal from '@/app/hooks/useSearchModal';
-import useCountries from '@/app/hooks/useCountries';
+import {useLocation} from "@/app/hooks/useCountries";
 
 const Search = () => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
-  const {getByValue} = useCountries();
+  const {getByValue} = useLocation();
 
   const locationValue = params?.get('locationValue');
   const startDate = params?.get('startDate');
@@ -20,7 +20,7 @@ const Search = () => {
 
   const locationLabel = useMemo(() => {
     if (locationValue) {
-      return getByValue(locationValue as string)?.label;
+      return getByValue(locationValue)?.name;
     }
 
     return 'Anywhere';

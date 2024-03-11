@@ -17,7 +17,6 @@ const HotelClient = ({listing}: any) => {
           />
           <ListingRoom
             rooms={listing.room_set}
-            currency={listing?.city.country.currency}
           />
         </div>
       </div>
