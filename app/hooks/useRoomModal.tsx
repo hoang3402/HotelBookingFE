@@ -10,9 +10,9 @@ interface RoomModalStore {
 
 const useRoomModal = create<RoomModalStore>((set) => ({
   isOpen: false,
+  roomId: null,
   onOpen: () => set({isOpen: true}),
   onClose: () => set({isOpen: false}),
-  roomId: null,
   setRoomId: (id: string) => set({roomId: id}),
 }));
 

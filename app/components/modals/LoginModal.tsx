@@ -4,23 +4,23 @@ import {useCallback, useState} from "react";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 import {FcGoogle} from "react-icons/fc";
 import {AiFillGithub} from "react-icons/ai";
+import {toast} from "react-hot-toast";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
+import useTokenStore from "@/app/hooks/useTokenStore";
+import {domain} from "@/app/actions/getRoomById";
 
 import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
-import {domain} from "@/app/actions/getRoomById";
-import {getActions} from "@/app/hooks/useUser";
-import {toast} from "react-hot-toast";
 
 const LoginModal = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false);
-  const {setAccessToken, setRefreshToken} = getActions();
+  const {setTokens} = useTokenStore();
 
   const {
     register,
@@ -48,14 +48,14 @@ const LoginModal = () => {
       }).then(res => res.json().then(data => {
         console.log(data)
 
-        setAccessToken(data.access);
-        setRefreshToken(data.refresh);
+        setTokens(data.access, data.refresh);
 
         toast.success('Successfully logged in');
-        setIsLoading(false);
         loginModal.onClose();
       })).catch(error => {
         console.log(error)
+      }).finally(() => {
+        setIsLoading(false);
       })
     }
 

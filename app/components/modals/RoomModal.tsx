@@ -36,12 +36,13 @@ const RoomModal = () => {
       },
     }).then((res) => res.json())
       .then((data) => {
-        setIsLoading(false)
-        console.log(data)
         setRoomData(data)
       })
       .catch((error) => {
         console.log(error)
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }, [roomModal.isOpen]);
 

@@ -1,15 +1,17 @@
 'use client';
 
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {AiOutlineMenu} from "react-icons/ai";
 
 import MenuItem from "./MenuItem";
 import Avatar from "../Avatar";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import useTokenStore from "@/app/hooks/useTokenStore";
 
 
 const UserMenu: React.FC = () => {
+  const currentUser = useTokenStore((state: any) => state);
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +19,10 @@ const UserMenu: React.FC = () => {
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
+
+  useEffect(() => {
+    setIsOpen(false)
+  }, [currentUser, loginModal, registerModal])
 
   return (
     <div className="relative">
@@ -79,16 +85,30 @@ const UserMenu: React.FC = () => {
           "
         >
           <div className="flex flex-col cursor-pointer">
-            <>
-              <MenuItem
-                label="Login"
-                onClick={loginModal.onOpen}
-              />
-              <MenuItem
-                label="Sign up"
-                onClick={registerModal.onOpen}
-              />
-            </>
+            {currentUser.isLoggedIn() ? (
+              <>
+                <MenuItem
+                  label="Profile"
+                  onClick={() => {
+                  }}
+                />
+                <MenuItem
+                  label="Logout"
+                  onClick={currentUser.logout}
+                />
+              </>
+            ) : (
+              <>
+                <MenuItem
+                  label="Login"
+                  onClick={loginModal.onOpen}
+                />
+                <MenuItem
+                  label="Sign up"
+                  onClick={registerModal.onOpen}
+                />
+              </>
+            )}
           </div>
         </div>
       )}
