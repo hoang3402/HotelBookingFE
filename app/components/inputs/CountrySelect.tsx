@@ -34,7 +34,7 @@ const CountrySelect = ({
   const {getAll, getProvinceByCountry, getCityByProvince} = useLocation();
 
   return (
-    <div>
+    <div className={'divide-y-8'}>
       <Select
         placeholder="Country"
         isClearable

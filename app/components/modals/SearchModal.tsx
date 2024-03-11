@@ -13,9 +13,10 @@ import CountrySelect from "../inputs/CountrySelect";
 import Heading from '../Heading';
 
 enum STEPS {
-  LOCATION = 0,
-  DATE = 1,
-  INFO = 2,
+  KEYWORD = 0,
+  LOCATION = 1,
+  DATE = 2,
+  INFO = 3,
 }
 
 const SearchModal = () => {
@@ -23,13 +24,14 @@ const SearchModal = () => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
 
-  const [step, setStep] = useState(STEPS.LOCATION);
+  const [step, setStep] = useState(STEPS.KEYWORD);
 
+  const [keyword, setKeyword] = useState<string>();
   const [country, setCountry] = useState<any>();
   const [province, setProvince] = useState<any>();
   const [city, setCity] = useState<any>();
-  const [guestCount, setGuestCount] = useState(1);
-  const [roomCount, setRoomCount] = useState(1);
+  const [adultsCount, setAdultsCount] = useState(1);
+  const [childrenCount, setChildrenCount] = useState(0);
   const [dateRange, setDateRange] = useState<Range>({
     startDate: new Date(),
     endDate: new Date(),
@@ -58,9 +60,13 @@ const SearchModal = () => {
       const updatedQuery: any = {
         ...currentQuery,
         locationValue: country?.code,
-        guestCount,
-        roomCount,
+        adultsCount,
+        childrenCount,
       };
+
+      if (keyword) {
+        updatedQuery.keyword = keyword
+      }
 
       if (dateRange.startDate) {
         // updatedQuery.startDate = formatISO(dateRange.startDate);
@@ -72,25 +78,37 @@ const SearchModal = () => {
         updatedQuery.endDate = dateRange.endDate.toISOString().split('T')[0];
       }
 
+      if (province) {
+        updatedQuery.province = province.id
+      }
+
+      if (city) {
+        updatedQuery.city = city.code
+      }
+
       const url = qs.stringifyUrl({
         url: '/',
         query: updatedQuery,
       }, {skipNull: true});
 
-      setStep(STEPS.LOCATION);
+      setStep(STEPS.KEYWORD);
       searchModal.onClose();
       router.push(url);
     },
     [
       step,
+      params,
+      country?.code,
+      adultsCount,
+      childrenCount,
+      keyword,
+      dateRange.startDate,
+      dateRange.endDate,
+      province,
+      city,
       searchModal,
-      country,
       router,
-      guestCount,
-      roomCount,
-      dateRange,
-      onNext,
-      params
+      onNext
     ]);
 
   const actionLabel = useMemo(() => {
@@ -102,7 +120,7 @@ const SearchModal = () => {
   }, [step]);
 
   const secondaryActionLabel = useMemo(() => {
-    if (step === STEPS.LOCATION) {
+    if (step === STEPS.KEYWORD) {
       return undefined
     }
 
@@ -110,24 +128,42 @@ const SearchModal = () => {
   }, [step]);
 
   let bodyContent = (
-    <div className="flex flex-col gap-8">
+    <div>
       <Heading
-        title="Where do you wanna go?"
-        subtitle="Find the perfect location!"
+        title="What are you looking for?"
+        subtitle="Find your perfect place!"
       />
-      <CountrySelect
-        valueCountry={country}
-        onChangeCountry={(value) =>
-          setCountry(value)}
-        valueProvince={province}
-        onChangeProvince={(value) =>
-          setProvince(value)}
-        valueCity={city}
-        onChangeCity={(value) =>
-          setCity(value)}
+      <input
+        type="text"
+        placeholder="Keyword"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        className="w-full p-4 text-lg font-light rounded-md border mt-2"
       />
     </div>
   )
+
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Where do you wanna go?"
+          subtitle="Find the perfect location!"
+        />
+        <CountrySelect
+          valueCountry={country}
+          onChangeCountry={(value) =>
+            setCountry(value)}
+          valueProvince={province}
+          onChangeProvince={(value) =>
+            setProvince(value)}
+          valueCity={city}
+          onChangeCity={(value) =>
+            setCity(value)}
+        />
+      </div>
+    )
+  }
 
   if (step === STEPS.DATE) {
     bodyContent = (
@@ -152,17 +188,17 @@ const SearchModal = () => {
           subtitle="Find your perfect place!"
         />
         <Counter
-          onChange={(value) => setGuestCount(value)}
-          value={guestCount}
-          title="Guests"
-          subtitle="How many guests are coming?"
+          onChange={(value) => setAdultsCount(value)}
+          value={adultsCount}
+          title="Adults"
+          subtitle="Ages 18 or above"
         />
         <hr/>
         <Counter
-          onChange={(value) => setRoomCount(value)}
-          value={roomCount}
-          title="Rooms"
-          subtitle="How many rooms do you need?"
+          onChange={(value) => setChildrenCount(value)}
+          value={childrenCount}
+          title="Children"
+          subtitle="Ages 0-17"
         />
       </div>
     )
@@ -175,7 +211,7 @@ const SearchModal = () => {
       actionLabel={actionLabel}
       onSubmit={onSubmit}
       secondaryActionLabel={secondaryActionLabel}
-      secondaryAction={step === STEPS.LOCATION ? undefined : onBack}
+      secondaryAction={step === STEPS.KEYWORD ? undefined : onBack}
       onClose={searchModal.onClose}
       body={bodyContent}
     />

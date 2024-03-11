@@ -2,8 +2,8 @@ import {domain} from "@/app/actions/getRoomById";
 
 export interface IListingsParams {
   userId?: string;
-  guestCount?: number;
-  roomCount?: number;
+  adultsCount?: number;
+  childrenCount?: number;
   startDate?: string;
   endDate?: string;
   locationValue?: string;
@@ -15,9 +15,12 @@ export default async function getHotels(
   try {
     const {
       userId,
-      roomCount,
-      guestCount,
+      keyword,
+      adultsCount,
+      childrenCount,
       locationValue,
+      provinceValue,
+      cityValue,
       startDate,
       endDate,
     } = params;
@@ -28,12 +31,12 @@ export default async function getHotels(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "keyword": "",
-        "adults": "",
-        "children": "",
+        "keyword": keyword ? keyword : "",
+        "adults": adultsCount ? adultsCount : 1,
+        "children": childrenCount ? childrenCount : 0,
         "country": locationValue,
-        "city": "",
-        "province": "",
+        "city": cityValue ? cityValue : "",
+        "province": provinceValue ? provinceValue : "",
         "check_in_date": startDate,
         "check_out_date": endDate
       })

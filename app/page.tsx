@@ -15,7 +15,9 @@ const Home = async ({searchParams}: HomeProps) => {
     <ClientOnly>
       <Container>
         <div className={'w-full flex justify-end font-bold text-xl'}>
-          Number hotel available: {listings?.numbers}
+          {listings && (
+            <div>Number hotel available: {listings?.numbers}</div>
+          )}
         </div>
         <div
           className="
