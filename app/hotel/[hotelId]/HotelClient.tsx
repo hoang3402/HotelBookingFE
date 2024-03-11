@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import ListingHead from "@/app/components/listings/ListingHead";
 import Container from "@/app/components/Container";
 import {ListingRoom} from "@/app/components/listings/ListingRoom";
@@ -11,7 +11,7 @@ const HotelClient = ({listing}: any) => {
           <ListingHead
             title={listing?.name}
             imageSrc={listing?.image}
-            location={listing?.city}
+            location={listing?.province}
             id={listing?.id}
             currentUser={null}
           />

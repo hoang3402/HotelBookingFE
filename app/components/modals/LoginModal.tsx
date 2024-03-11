@@ -4,7 +4,6 @@ import {useCallback, useState} from "react";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 import {FcGoogle} from "react-icons/fc";
 import {AiFillGithub} from "react-icons/ai";
-import {useRouter} from "next/navigation";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
@@ -13,12 +12,15 @@ import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
+import {domain} from "@/app/actions/getRoomById";
+import {getActions} from "@/app/hooks/useUser";
+import {toast} from "react-hot-toast";
 
 const LoginModal = () => {
-  const router = useRouter();
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false);
+  const {setAccessToken, setRefreshToken} = getActions();
 
   const {
     register,
@@ -34,8 +36,27 @@ const LoginModal = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> =
-    () => {
+    (data) => {
       setIsLoading(true);
+
+      fetch(`${domain}api/auth/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(res => res.json().then(data => {
+        console.log(data)
+
+        setAccessToken(data.access);
+        setRefreshToken(data.refresh);
+
+        toast.success('Successfully logged in');
+        setIsLoading(false);
+        loginModal.onClose();
+      })).catch(error => {
+        console.log(error)
+      })
     }
 
   const onToggle = useCallback(() => {

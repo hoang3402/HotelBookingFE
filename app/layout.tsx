@@ -8,6 +8,7 @@ import SearchModal from "@/app/components/modals/SearchModal";
 import LoginModal from "@/app/components/modals/LoginModal";
 import RegisterModal from "@/app/components/modals/RegisterModal";
 import RoomModal from "@/app/components/modals/RoomModal";
+import {AuthProvider} from "@/app/context/AuthContext";
 
 export const metadata = {
   title: 'Hotel booking',

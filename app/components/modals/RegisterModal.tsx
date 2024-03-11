@@ -12,11 +12,16 @@ import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
+import {domain} from "@/app/actions/getRoomById";
+import {toast} from "react-hot-toast";
+import {getActions} from "@/app/hooks/useUser";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
+
+  const {setAccessToken, setRefreshToken} = getActions();
 
   const {
     register,
@@ -26,14 +31,43 @@ const RegisterModal = () => {
     },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
       email: '',
       password: ''
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = () => {
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
+
+    fetch(`${domain}api/auth/register/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "first_name": data.firstName,
+        "last_name": data.lastName,
+        "email": data.email,
+        "password": data.password,
+        "number_phone": data.phone
+      }),
+    }).then(res => res.json()
+      .then(data => {
+        console.log(data)
+
+        setAccessToken(data.access);
+        setRefreshToken(data.refresh);
+
+        toast.success('Successfully registered');
+        setIsLoading(false)
+        loginModal.onClose();
+      }))
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   const onToggle = useCallback(() => {
@@ -50,14 +84,31 @@ const RegisterModal = () => {
       <Input
         id="email"
         label="Email"
+        type={'email'}
         disabled={isLoading}
         register={register}
         errors={errors}
         required
       />
       <Input
-        id="name"
-        label="Name"
+        id="firstName"
+        label="First Name"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="lastName"
+        label="Last Name"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="phone"
+        label="Phone"
         disabled={isLoading}
         register={register}
         errors={errors}
@@ -82,13 +133,15 @@ const RegisterModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => {
+        }}
       />
       <Button
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => {
+        }}
       />
       <div
         className="

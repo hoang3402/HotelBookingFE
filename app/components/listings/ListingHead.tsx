@@ -21,11 +21,12 @@ const ListingHead: React.FC<ListingHeadProps> = ({
                                                    id,
                                                    currentUser
                                                  }) => {
+  console.log(location)
   return (
     <>
       <Heading
         title={title}
-        subtitle={`${location?.name}, ${location?.country.name}`}
+        subtitle={`${location?.name}, ${location?.country?.name}`}
       />
       <div className="
           w-full
