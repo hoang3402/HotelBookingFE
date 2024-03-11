@@ -46,8 +46,7 @@ const LoginModal = () => {
         },
         body: JSON.stringify(data)
       }).then(res => res.json().then(data => {
-        console.log(data)
-
+        // console.log(data)
         setTokens(data.access, data.refresh);
 
         toast.success('Successfully logged in');

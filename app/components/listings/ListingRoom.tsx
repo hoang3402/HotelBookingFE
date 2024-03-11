@@ -5,13 +5,14 @@ import Image from "next/image"
 import React from "react"
 
 interface listingCardRoomProps {
-  room: any
+  room: any,
+  currency: any
 }
 
-const ListingCardRoom: React.FC<listingCardRoomProps> = ({room}) => {
+const ListingCardRoom: React.FC<listingCardRoomProps> = ({room, currency}) => {
   const formattedPrice = (room?.price / 1).toLocaleString('en-US', {
     style: 'currency',
-    currency: room.hotel.province.country.currency,
+    currency: currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
@@ -39,10 +40,11 @@ const ListingCardRoom: React.FC<listingCardRoomProps> = ({room}) => {
 }
 
 interface ListingRoomProps {
-  rooms: any
+  rooms: any,
+  currency: any
 }
 
-export const ListingRoom: React.FC<ListingRoomProps> = ({rooms}) => {
+export const ListingRoom: React.FC<ListingRoomProps> = ({rooms, currency}) => {
   const roomModal = useRoomModal()
 
   function handleClick(roomId: any) {
@@ -52,14 +54,16 @@ export const ListingRoom: React.FC<ListingRoomProps> = ({rooms}) => {
 
   return (
     <div className={'flex flex-col gap-3'}>
-      {rooms.map((room: any) => (
-        <div
-          key={room.id}
-          onClick={() => handleClick(room.id)}
-        >
-          <ListingCardRoom room={room}/>
-        </div>
-      ))}
+      {rooms && (
+        rooms.map((room: any) => (
+          <div
+            key={room.id}
+            onClick={() => handleClick(room.id)}
+          >
+            <ListingCardRoom room={room} currency={currency}/>
+          </div>
+        ))
+      )}
     </div>
   )
 }

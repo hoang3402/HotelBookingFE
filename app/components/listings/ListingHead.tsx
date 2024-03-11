@@ -21,7 +21,6 @@ const ListingHead: React.FC<ListingHeadProps> = ({
                                                    id,
                                                    currentUser
                                                  }) => {
-  console.log(location)
   return (
     <>
       <Heading

@@ -2,6 +2,9 @@ import {domain} from "@/app/actions/getRoomById";
 
 export interface IListingsParams {
   userId?: string;
+  keyword?: string;
+  provinceValue?: string;
+  cityValue?: string;
   adultsCount?: number;
   childrenCount?: number;
   startDate?: string;
