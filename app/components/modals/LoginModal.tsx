@@ -8,19 +8,19 @@ import {toast} from "react-hot-toast";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
-import useTokenStore from "@/app/hooks/useTokenStore";
 import {domain} from "@/app/actions/getRoomById";
 
 import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 const LoginModal = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false);
-  const {setTokens} = useTokenStore();
+  const signIn = useSignIn()
 
   const {
     register,
@@ -47,7 +47,27 @@ const LoginModal = () => {
         body: JSON.stringify(data)
       }).then(res => res.json().then(data => {
         // console.log(data)
-        setTokens(data.access, data.refresh);
+        
+        if (signIn({
+          auth: {
+            token: data.access,
+            type: 'Bearer'
+          },
+          refresh: data.refresh,
+          userState: {
+            uid: data.user.id,
+            email: data.user.email,
+            first_name: data.user.first_name,
+            last_name: data.user.last_name,
+            phone: data.user.phone
+          }
+        })) {
+          // Redirect or do-something
+        } else {
+          //Throw error
+          toast.error('Something went wrong');
+          loginModal.onClose();
+        }
 
         toast.success('Successfully logged in');
         loginModal.onClose();

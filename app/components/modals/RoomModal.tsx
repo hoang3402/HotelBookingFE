@@ -2,16 +2,16 @@
 
 import Modal from "@/app/components/modals/Modal";
 import useRoomModal from "@/app/hooks/useRoomModal";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DateRange} from "react-date-range";
 import {domain} from "@/app/actions/getRoomById";
 import {toast} from "react-hot-toast";
-import useTokenStore from "@/app/hooks/useTokenStore";
 import {eachDayOfInterval, endOfMonth, startOfMonth} from "date-fns";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 const RoomModal = () => {
   let roomModal = useRoomModal((state) => state)
-  const user = useTokenStore((state: any) => state)
+  const token = useAuthHeader()
   const [isLoading, setIsLoading] = useState(false)
   const [roomData, setRoomData] = useState<any>(null)
   const [selectedRange, setSelectedRange] = useState({
@@ -120,7 +120,7 @@ const RoomModal = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${user.accessToken}`
+        "Authorization": token ?? ''
       },
       body: JSON.stringify({
         "room_id": roomData.id,

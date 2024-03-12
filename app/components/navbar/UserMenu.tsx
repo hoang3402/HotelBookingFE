@@ -7,11 +7,15 @@ import MenuItem from "./MenuItem";
 import Avatar from "../Avatar";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
-import useTokenStore from "@/app/hooks/useTokenStore";
+import {useRouter} from "next/navigation";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 
 const UserMenu: React.FC = () => {
-  const currentUser = useTokenStore((state: any) => state);
+  const route = useRouter();
+  const currentUser = useAuthUser()
+  const signOut = useSignOut()
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isOpen, setIsOpen] = useState(false);
@@ -85,7 +89,7 @@ const UserMenu: React.FC = () => {
           "
         >
           <div className="flex flex-col cursor-pointer">
-            {currentUser.isLoggedIn() ? (
+            {currentUser ? (
               <>
                 <MenuItem
                   label="Profile"
@@ -93,8 +97,15 @@ const UserMenu: React.FC = () => {
                   }}
                 />
                 <MenuItem
+                  label="Bookings"
+                  onClick={() => {
+                    setIsOpen(false)
+                    route.push('/account/bookings')
+                  }}
+                />
+                <MenuItem
                   label="Logout"
-                  onClick={currentUser.logout}
+                  onClick={signOut}
                 />
               </>
             ) : (
@@ -116,4 +127,4 @@ const UserMenu: React.FC = () => {
   );
 }
 
-export default UserMenu;
+export default UserMenu

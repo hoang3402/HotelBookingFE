@@ -14,14 +14,13 @@ import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
-import useTokenStore from "@/app/hooks/useTokenStore";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
-
-  const {setTokens} = useTokenStore()
+  const signIn = useSignIn();
 
   const {
     register,
@@ -58,7 +57,26 @@ const RegisterModal = () => {
       .then(data => {
         console.log(data)
 
-        setTokens(data.access, data.refresh);
+        if (signIn({
+          auth: {
+            token: data.access,
+            type: 'Bearer'
+          },
+          refresh: data.refresh,
+          userState: {
+            uid: data.user.id,
+            email: data.user.email,
+            first_name: data.user.first_name,
+            last_name: data.user.last_name,
+            phone: data.user.phone
+          }
+        })) {
+          // Redirect or do-something
+        } else {
+          //Throw error
+          toast.error('Something went wrong');
+          loginModal.onClose();
+        }
 
         toast.success('Successfully registered');
         loginModal.onClose();

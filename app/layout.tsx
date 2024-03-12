@@ -8,6 +8,9 @@ import SearchModal from "@/app/components/modals/SearchModal";
 import LoginModal from "@/app/components/modals/LoginModal";
 import RegisterModal from "@/app/components/modals/RegisterModal";
 import RoomModal from "@/app/components/modals/RoomModal";
+import NextAuth from "@auth-kit/next";
+import AuthProvider from "react-auth-kit";
+import store from "@/app/store";
 
 export const metadata = {
   title: 'Hotel booking',
@@ -24,20 +27,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-    <body className={font.className}>
-    <ClientOnly>
-      <ToasterProvider/>
-      <SearchModal/>
-      <LoginModal/>
-      <RegisterModal/>
-      <RoomModal/>
-      <Navbar/>
-    </ClientOnly>
-    <div className={'pb-20 pt-28'}>
-      {children}
-    </div>
-    </body>
-    </html>
+    <AuthProvider store={store}>
+      <html lang="en">
+      <body className={font.className}>
+      <ClientOnly>
+        <ToasterProvider/>
+        <SearchModal/>
+        <LoginModal/>
+        <RegisterModal/>
+        <RoomModal/>
+        <Navbar/>
+      </ClientOnly>
+      <div className={'pb-20 pt-28'}>
+        {children}
+      </div>
+      </body>
+      </html>
+    </AuthProvider>
   );
 }
