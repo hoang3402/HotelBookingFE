@@ -1,8 +1,9 @@
 'use client';
 
+import {domain} from "@/app/actions/getRoomById";
+
 import createStore from "react-auth-kit/createStore";
 import createRefresh from "react-auth-kit/createRefresh";
-import {domain} from "@/app/actions/getRoomById";
 
 const refresh = createRefresh({
   interval: 60,

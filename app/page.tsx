@@ -1,5 +1,5 @@
-import getHotels, {IListingsParams} from "@/app/actions/getHotels";
 import React from "react";
+import getHotels, {IListingsParams} from "@/app/actions/getHotels";
 import ListingCard from "@/app/components/listings/ListingCard";
 import ClientOnly from "@/app/components/ClientOnly";
 import Container from "@/app/components/Container";
