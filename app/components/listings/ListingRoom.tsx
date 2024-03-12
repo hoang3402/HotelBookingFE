@@ -3,7 +3,7 @@
 import useRoomModal from "@/app/hooks/useRoomModal";
 import Image from "next/image"
 import React from "react"
-import FormattedPrice from "@/app/components/currency";
+import {FormattedPrice} from "@/app/components/Ultility";
 
 interface listingCardRoomProps {
   room: any,

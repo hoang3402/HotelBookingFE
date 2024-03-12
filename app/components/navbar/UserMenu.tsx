@@ -107,7 +107,10 @@ const UserMenu: React.FC = () => {
                 />
                 <MenuItem
                   label="Logout"
-                  onClick={signOut}
+                  onClick={()=>{
+                    setIsOpen(false)
+                    signOut()
+                  }}
                 />
               </>
             ) : (
