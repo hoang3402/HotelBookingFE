@@ -1,7 +1,6 @@
 import {domain} from "@/app/actions/getRoomById";
 
 export interface IListingsParams {
-  userId?: string;
   keyword?: string;
   provinceValue?: string;
   cityValue?: string;
@@ -17,7 +16,6 @@ export default async function getHotels(
 ) {
   try {
     const {
-      userId,
       keyword,
       adultsCount,
       childrenCount,
@@ -42,7 +40,8 @@ export default async function getHotels(
         "province": provinceValue ? provinceValue : "",
         "check_in_date": startDate,
         "check_out_date": endDate
-      })
+      }),
+      cache: "no-cache",
     }).then((res) => {
       return res.json()
     }).catch((error) => {
