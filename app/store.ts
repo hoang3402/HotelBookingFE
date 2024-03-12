@@ -2,24 +2,29 @@
 
 import createStore from "react-auth-kit/createStore";
 import createRefresh from "react-auth-kit/createRefresh";
+import {domain} from "@/app/actions/getRoomById";
 
+// @ts-ignore
 const refresh = createRefresh({
-  interval: 10,
+  interval: 3600, // time in sec
   refreshApiCallback: async (param) => {
     try {
-      const response = await fetch('/api/auth/token/refresh/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(param)
-      }).then((res) => res.json())
       console.log("Refreshing")
+      const response = await fetch(`${domain}api/auth/token/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: param.refreshToken,
+        }),
+      }).then(res => res.json())
       return {
         isSuccess: true,
-        newAuthToken: response.access,
-        newAuthTokenExpireIn: 10,
-        newRefreshTokenExpiresIn: 60
+        newAuthToken: response.data.access,
+        newRefreshToken: response.data.refresh,
+        newAuthTokenExpireIn: 3600,
+        newRefreshTokenExpiresIn: 86400
       }
     } catch (error) {
       console.error(error)
@@ -34,7 +39,7 @@ const store = createStore({
   authName: '_auth',
   authType: 'cookie',
   cookieDomain: typeof window !== "undefined" ? window.location.hostname : 'localhost',
-  cookieSecure: true,
+  cookieSecure: typeof window !== "undefined" ? window.location.protocol === 'https:' : true,
   refresh: refresh
 });
 

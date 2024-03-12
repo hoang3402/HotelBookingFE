@@ -6,6 +6,7 @@ import React, {useCallback, useMemo} from "react";
 import {format} from 'date-fns';
 import HeartButton from "../HeartButton";
 import Button from "../Button";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 interface ListingCardProps {
   data: any;
@@ -14,7 +15,6 @@ interface ListingCardProps {
   disabled?: boolean;
   actionLabel?: string;
   actionId?: string;
-  currentUser?: any
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -24,11 +24,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
                                                    disabled,
                                                    actionLabel,
                                                    actionId = '',
-                                                   currentUser,
                                                  }) => {
   const router = useRouter();
-  // const {getByValue} = useCountries();
-  // const location = getByValue(data.locationValue);
+  const currentUser = useAuthUser()
 
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,25 +38,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
       onAction?.(actionId)
     }, [disabled, onAction, actionId]);
-
-  const price = useMemo(() => {
-    if (reservation) {
-      return reservation.totalPrice;
-    }
-
-    return data.price;
-  }, [reservation, data.price]);
-
-  const reservationDate = useMemo(() => {
-    if (!reservation) {
-      return null;
-    }
-
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
-
-    return `${format(start, 'PP')} - ${format(end, 'PP')}`;
-  }, [reservation]);
 
   return (
     <div

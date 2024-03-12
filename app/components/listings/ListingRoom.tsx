@@ -3,6 +3,7 @@
 import useRoomModal from "@/app/hooks/useRoomModal";
 import Image from "next/image"
 import React from "react"
+import FormattedPrice from "@/app/components/currency";
 
 interface listingCardRoomProps {
   room: any,
@@ -10,13 +11,7 @@ interface listingCardRoomProps {
 }
 
 const ListingCardRoom: React.FC<listingCardRoomProps> = ({room, currency}) => {
-  const formattedPrice = (room?.price / 1).toLocaleString('en-US', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  });
-
+  const formattedPrice = FormattedPrice(room.price, currency)
   return (
     <div className="w-full rounded-2xl cursor-pointer border-[1px] p-3">
       <h2 className="text-2xl font-bold">{room?.name}</h2>
@@ -53,17 +48,20 @@ export const ListingRoom: React.FC<ListingRoomProps> = ({rooms, currency}) => {
   }
 
   return (
-    <div className={'flex flex-col gap-3'}>
-      {rooms && (
-        rooms.map((room: any) => (
-          <div
-            key={room.id}
-            onClick={() => handleClick(room.id)}
-          >
-            <ListingCardRoom room={room} currency={currency}/>
-          </div>
-        ))
-      )}
+    <div>
+      <h2 className="text-2xl font-bold">Rooms</h2>
+      <div className={'flex flex-col gap-3'}>
+        {rooms && (
+          rooms.map((room: any) => (
+            <div
+              key={room.id}
+              onClick={() => handleClick(room.id)}
+            >
+              <ListingCardRoom room={room} currency={currency}/>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }

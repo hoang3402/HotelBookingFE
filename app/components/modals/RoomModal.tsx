@@ -144,7 +144,7 @@ const RoomModal = () => {
 
   return (
     <Modal
-      disabled={!roomData?.is_available && isLoading}
+      disabled={!roomData?.is_available || isLoading}
       isOpen={roomModal.isOpen}
       title={roomData ? roomData.name : "Loading..."}
       actionLabel="Book"

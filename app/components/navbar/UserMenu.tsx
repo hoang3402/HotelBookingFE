@@ -94,6 +94,8 @@ const UserMenu: React.FC = () => {
                 <MenuItem
                   label="Profile"
                   onClick={() => {
+                    setIsOpen(false)
+                    route.push('/account')
                   }}
                 />
                 <MenuItem

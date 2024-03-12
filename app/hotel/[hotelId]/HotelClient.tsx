@@ -15,6 +15,12 @@ const HotelClient = ({listing}: any) => {
             id={listing?.id}
             currentUser={null}
           />
+          <div>
+            <h2 className="text-2xl font-bold">Description</h2>
+            <p className="text-lg">
+              {listing?.description}
+            </p>
+          </div>
           <ListingRoom
             rooms={listing.room_set} currency={listing.province?.country?.currency}
           />
