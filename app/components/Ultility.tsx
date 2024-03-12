@@ -1,4 +1,4 @@
-function FormattedPrice(price: any, currency: any) {
+export function FormattedPrice(price: any, currency: any) {
   return (price / 1).toLocaleString('en-US', {
     style: 'currency',
     currency: currency,
@@ -7,4 +7,6 @@ function FormattedPrice(price: any, currency: any) {
   });
 }
 
-export default FormattedPrice
+export function FormattedDate(date: any) {
+  return new Date(date).toDateString()
+}

@@ -8,6 +8,7 @@ import {domain} from "@/app/actions/getRoomById";
 import {toast} from "react-hot-toast";
 import {eachDayOfInterval, endOfMonth, startOfMonth} from "date-fns";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import {FormattedPrice} from "@/app/components/Ultility";
 
 const RoomModal = () => {
   let roomModal = useRoomModal((state) => state)
@@ -19,16 +20,18 @@ const RoomModal = () => {
     endDate: new Date(),
     key: 'selection'
   });
+  const [totalPrice, setTotalPrice] = useState("")
 
   const [disabledDates, setDisabledDates] = useState<any>([])
 
   useEffect(() => {
-    if (!roomModal.isOpen || !roomModal.roomId) {
+    if (!roomModal.isOpen || !roomModal.roomId || roomModal.roomId === roomData?.id) {
       return
     }
 
     if (roomModal.roomId !== roomData?.id) {
       setDisabledDates([])
+      setTotalPrice("")
     }
 
     setIsLoading(true)
@@ -90,7 +93,33 @@ const RoomModal = () => {
       .catch((error) => {
         console.log(error)
       })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [roomModal.isOpen]);
+
+  useEffect(() => {
+    if (!selectedRange.startDate || !selectedRange.endDate || !roomModal.roomId) {
+      setTotalPrice("")
+      return
+    }
+
+    fetch(`${domain}api/booking/price/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "check_in_date": selectedRange.startDate.toISOString().split('T')[0],
+        "check_out_date": selectedRange.endDate.toISOString().split('T')[0],
+        "room_id": roomModal.roomId,
+        "currency": "USD"
+      })
+    }).then(res => res.json())
+      .then(data => {
+        setTotalPrice(FormattedPrice(data.price, "USD"))
+      })
+  }, [selectedRange])
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -110,6 +139,10 @@ const RoomModal = () => {
         minDate={new Date()}
         disabledDates={disabledDates}
       />
+      <hr/>
+      <div className={'flex justify-center text-3xl font-bold'}>
+        {totalPrice ? <p>Total price: {totalPrice}</p> : <p>Please select a date</p>}
+      </div>
     </div>
   )
 
@@ -144,7 +177,7 @@ const RoomModal = () => {
 
   return (
     <Modal
-      disabled={!roomData?.is_available || isLoading}
+      disabled={totalPrice === "" || totalPrice === "$0"}
       isOpen={roomModal.isOpen}
       title={roomData ? roomData.name : "Loading..."}
       actionLabel="Book"
