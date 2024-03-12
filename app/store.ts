@@ -4,7 +4,6 @@ import createStore from "react-auth-kit/createStore";
 import createRefresh from "react-auth-kit/createRefresh";
 import {domain} from "@/app/actions/getRoomById";
 
-// @ts-ignore
 const refresh = createRefresh({
   interval: 60,
   refreshApiCallback: async (param) => {
