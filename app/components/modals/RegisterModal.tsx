@@ -51,7 +51,8 @@ const RegisterModal = () => {
         "last_name": data.lastName,
         "email": data.email,
         "password": data.password,
-        "number_phone": data.phone
+        "number_phone": data.phone,
+        "role": "user"
       }),
     }).then(res => res.json()
       .then(data => {

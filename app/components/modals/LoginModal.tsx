@@ -15,6 +15,7 @@ import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import {jwtDecode} from "jwt-decode";
 
 const LoginModal = () => {
   const loginModal = useLoginModal();
@@ -47,6 +48,9 @@ const LoginModal = () => {
         body: JSON.stringify(data)
       }).then(res => res.json().then(data => {
         // console.log(data)
+
+        // decode
+        const payload: any = jwtDecode(data.access)
         
         if (signIn({
           auth: {
@@ -59,7 +63,8 @@ const LoginModal = () => {
             email: data.user.email,
             first_name: data.user.first_name,
             last_name: data.user.last_name,
-            phone: data.user.phone
+            phone: data.user.phone,
+            role: payload.role
           }
         })) {
           // Redirect or do-something
