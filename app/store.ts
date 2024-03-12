@@ -6,11 +6,11 @@ import {domain} from "@/app/actions/getRoomById";
 
 // @ts-ignore
 const refresh = createRefresh({
-  interval: 3600, // time in sec
+  interval: 60,
   refreshApiCallback: async (param) => {
     try {
       console.log("Refreshing")
-      const response = await fetch(`${domain}api/auth/token/refresh`, {
+      const response = await fetch(`${domain}api/auth/token/refresh/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -21,15 +21,19 @@ const refresh = createRefresh({
       }).then(res => res.json())
       return {
         isSuccess: true,
-        newAuthToken: response.data.access,
-        newRefreshToken: response.data.refresh,
-        newAuthTokenExpireIn: 3600,
-        newRefreshTokenExpiresIn: 86400
+        newAuthToken: response.access,
+        newRefreshToken: response.refresh,
+        newAuthTokenExpireIn: 60,
+        newRefreshTokenExpiresIn: 1440
       }
     } catch (error) {
       console.error(error)
       return {
-        isSuccess: false
+        isSuccess: false,
+        newAuthToken: "",
+        newRefreshToken: "",
+        newAuthTokenExpireIn: 0,
+        newRefreshTokenExpiresIn: 0
       }
     }
   }
