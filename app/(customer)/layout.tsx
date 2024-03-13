@@ -1,5 +1,5 @@
 import {Nunito} from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import React from "react";
 import ClientOnly from "@/app/components/ClientOnly";
 import ToasterProvider from "@/app/providers/ToasterProvider";
@@ -26,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <html lang="en">
     <AuthProvider store={store}>
-      <html lang="en">
       <body className={font.className}>
       <ClientOnly>
         <ToasterProvider/>
@@ -41,7 +41,7 @@ export default function RootLayout({
         {children}
       </div>
       </body>
-      </html>
     </AuthProvider>
+    </html>
   );
 }

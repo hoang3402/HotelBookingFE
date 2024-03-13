@@ -12,7 +12,6 @@ import NextAuth from "@auth-kit/next";
 import {DateRange} from "react-date-range";
 import {FormattedDate, FormattedPrice} from "@/app/components/Ultility";
 import Button from "@/app/components/Button";
-import {Toast} from "next/dist/client/components/react-dev-overlay/internal/components/Toast";
 import {toast} from "react-hot-toast";
 
 interface IParams {

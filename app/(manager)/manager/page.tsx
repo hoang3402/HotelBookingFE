@@ -1,5 +1,5 @@
 import NextAuth from "@auth-kit/next";
-import ManagerClient from "@/app/manager/ManagerClient";
+import ManagerClient from "@/app/(manager)/manager/ManagerClient";
 
 const ManagerPage = () => {
   return (

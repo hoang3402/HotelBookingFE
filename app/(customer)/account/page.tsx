@@ -3,8 +3,8 @@
 import Container from "@/app/components/Container";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import NextAuth from "@auth-kit/next";
-import Button from "../components/Button";
 import {useRouter} from "next/navigation";
+import Button from "@/app/components/Button";
 
 export default function Page() {
   const user: any = useAuthUser()

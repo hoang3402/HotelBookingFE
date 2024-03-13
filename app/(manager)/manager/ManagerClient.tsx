@@ -2,6 +2,7 @@
 
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {useRouter} from "next/navigation";
+import SideBar from "@/app/components/SideBar";
 
 const ManagerClient = () => {
   const user: any = useAuthUser()
@@ -10,7 +11,12 @@ const ManagerClient = () => {
   if (user.role === 'user') route.push('/')
 
   return (
-    <div></div>
+    <div>
+      <div className="w-1/3">
+        <SideBar/>
+      </div>
+      <div></div>
+    </div>
   )
 }
 

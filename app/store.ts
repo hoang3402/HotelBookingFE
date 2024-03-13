@@ -6,7 +6,7 @@ import createStore from "react-auth-kit/createStore";
 import createRefresh from "react-auth-kit/createRefresh";
 
 const refresh = createRefresh({
-  interval: 60,
+  interval: 10,
   refreshApiCallback: async (param) => {
     try {
       console.log("Refreshing")
@@ -41,10 +41,10 @@ const refresh = createRefresh({
 
 const store = createStore({
   authName: '_auth',
-  authType: 'cookie',
-  cookieDomain: typeof window !== "undefined" ? window.location.hostname : 'localhost',
-  cookieSecure: typeof window !== "undefined" ? window.location.protocol === 'https:' : true,
-  refresh: refresh
+  authType: 'localstorage',
+  // cookieDomain: typeof window !== "undefined" ? window.location.hostname : 'localhost',
+  // cookieSecure: typeof window !== "undefined" ? window.location.protocol === 'https:' : true,
+  refresh: refresh,
 });
 
 export default store
