@@ -1,7 +1,7 @@
 import ClientOnly from "@/app/components/ClientOnly";
 import React from "react";
-import HotelClient from "@/app/hotel/[hotelId]/HotelClient";
 import getHotelById from "@/app/actions/getHotelById";
+import HotelClient from "@/app/(customer)/hotel/[hotelId]/HotelClient";
 
 interface IParams {
   hotelId?: string;
