@@ -106,6 +106,7 @@ const LoginModal = () => {
         register={register}
         errors={errors}
         required
+
       />
       <Input
         id="password"

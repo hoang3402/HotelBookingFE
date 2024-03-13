@@ -73,7 +73,7 @@ const StaffBookingPage = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        // "Authorize": `${token}`
+        "Authorization": `${token}`
       },
       cache: 'reload'
     }).then(res => res.json())

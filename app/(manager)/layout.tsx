@@ -31,10 +31,11 @@ export default function RootLayout({
       </ClientOnly>
       <div className={'w-1/6'}>
         <SideBar>
-          <SidebarItem text={'Home'}></SidebarItem>
+          <SidebarItem text={'Home'}/>
+          <SidebarItem text={'Booking'}/>
         </SideBar>
-        <div>{children}</div>
       </div>
+      <div>{children}</div>
       </body>
       </html>
     </AuthProvider>
