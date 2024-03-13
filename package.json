@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth-kit/next": "^3.1.2",
+    "@nextui-org/table": "^2.0.28",
     "date-fns": "^3.3.1",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
