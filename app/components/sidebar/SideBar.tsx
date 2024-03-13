@@ -20,6 +20,10 @@ export default function SideBar({user, route}: any) {
     route.push('/')
   }
 
+  function handleSelect() {
+    route.push('/manager/booking')
+  }
+
   return (
     <>
       <span
@@ -57,7 +61,7 @@ export default function SideBar({user, route}: any) {
             className="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
           />
         </div>
-        <SideBarItem label={'Booking'}/>
+        <SideBarItem label={'Booking'} onClick={handleSelect}/>
         <div className="my-4 bg-gray-600 h-[1px]"></div>
         <SideBarItem label={'Logout'} onClick={handleLogout}/>
       </div>
