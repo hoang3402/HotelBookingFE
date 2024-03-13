@@ -9,6 +9,7 @@ import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loader from "@/app/components/Loader";
 import {FormattedPrice} from "@/app/components/Ultility";
+import NextAuth from "@auth-kit/next";
 
 
 const columns = [
@@ -98,16 +99,18 @@ const StaffBookingPage = () => {
   }, [])
 
   return (
-    <Container>
-      <h1>Booking</h1>
-      <div>
-        {isLoading ? (
-          <Loader/>
-        ) : (
-          <MyTable title={'Booking'} columns={columns} rows={data}/>
-        )}
-      </div>
-    </Container>
+    <NextAuth fallbackPath={'/'}>
+      <Container>
+        <h1>Booking</h1>
+        <div>
+          {isLoading ? (
+            <Loader/>
+          ) : (
+            <MyTable title={'Booking'} columns={columns} rows={data}/>
+          )}
+        </div>
+      </Container>
+    </NextAuth>
   )
 }
 

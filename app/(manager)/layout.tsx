@@ -5,6 +5,8 @@ import AuthProvider from "react-auth-kit";
 import store from "@/app/store";
 import ToasterProvider from "@/app/providers/ToasterProvider";
 import ClientOnly from "@/app/components/ClientOnly";
+import SideBar from "@/app/components/sidebar/SideBar";
+import {SidebarItem} from "@/app/components/sidebar/SideBarItem";
 
 export const metadata = {
   title: 'Dashboard Hotel booking',
@@ -27,7 +29,12 @@ export default function RootLayout({
       <ClientOnly>
         <ToasterProvider/>
       </ClientOnly>
-      <div>{children}</div>
+      <div className={'w-1/6'}>
+        <SideBar>
+          <SidebarItem text={'Home'}></SidebarItem>
+        </SideBar>
+        <div>{children}</div>
+      </div>
       </body>
       </html>
     </AuthProvider>

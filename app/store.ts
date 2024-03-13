@@ -41,9 +41,9 @@ const refresh = createRefresh({
 
 const store = createStore({
   authName: '_auth',
-  authType: 'localstorage',
-  // cookieDomain: typeof window !== "undefined" ? window.location.hostname : 'localhost',
-  // cookieSecure: typeof window !== "undefined" ? window.location.protocol === 'https:' : true,
+  authType: 'cookie',
+  cookieDomain: typeof window !== "undefined" ? window.location.hostname : 'localhost',
+  cookieSecure: typeof window !== "undefined" ? window.location.protocol === 'https:' : true,
   refresh: refresh,
 });
 

@@ -1,70 +1,57 @@
-import useSignOut from "react-auth-kit/hooks/useSignOut";
-import SideBarItem from "@/app/components/sidebar/SideBarItem";
-import {toast} from "react-hot-toast";
-import {IoMdArrowBack} from "react-icons/io";
+'use client';
 
-export default function SideBar({user, route}: any) {
-  const logout = useSignOut()
+import React from "react";
+import {LuChevronFirst, LuChevronLast} from "react-icons/lu";
+import {FiMoreVertical} from "react-icons/fi";
+import {useSideBar} from "@/app/hooks/useSideBar";
 
-  function handleLogout() {
-    let _ = logout()
-    if (_) {
-      toast.success("Logout successfully")
-      route.push('/')
-    } else {
-      toast.error("Logout failed")
-    }
-  }
-
-  function handleBack() {
-    route.push('/')
-  }
-
-  function handleSelect() {
-    route.push('/manager/booking')
-  }
+export default function SideBar({children}: any) {
+  
+  const sideBar = useSideBar()
 
   return (
-    <>
-      <span
-        className="absolute text-white text-4xl top-5 left-4 cursor-pointer"
-        onClick={() => {
-        }}
-      >
-        <i className="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
-      </span>
-      <div
-        className="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-1/4 overflow-y-auto text-center bg-gray-900"
-      >
-        <div className="text-gray-100 text-xl">
-          <div className="p-2.5 mt-1 flex items-center">
-            <IoMdArrowBack
-              className="cursor-pointer"
-              onClick={handleBack}
-            />
-            <h1 className="font-bold text-gray-200 ml-3 truncate">Hello {user.role}</h1>
-            <i
-              className="bi bi-x cursor-pointer lg:hidden"
-              onClick={() => {
-              }}
-            ></i>
-          </div>
-          <div className="my-2 bg-gray-600 h-[1px]"></div>
-        </div>
-        <div
-          className="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white"
-        >
-          <i className="bi bi-search text-sm"></i>
-          <input
-            type="text"
-            placeholder="Search"
-            className="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
+    <aside className="h-screen">
+      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+        <div className="p-4 pb-2 flex justify-between items-center">
+          <img
+            src="/images/logo.png"
+            className={`overflow-hidden transition-all ${
+              sideBar.isOpen ? "w-32" : "w-0"
+            }`}
+            alt=""
           />
+          <button
+            onClick={sideBar.toggle}
+            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+          >
+            {sideBar.isOpen ? <LuChevronFirst/> : <LuChevronLast/>}
+          </button>
         </div>
-        <SideBarItem label={'Booking'} onClick={handleSelect}/>
-        <div className="my-4 bg-gray-600 h-[1px]"></div>
-        <SideBarItem label={'Logout'} onClick={handleLogout}/>
-      </div>
-    </>
+
+        <div>
+          <ul className="flex-1 px-3">{children}</ul>
+        </div>
+
+        <div className="border-t flex p-3">
+          <img
+            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+            alt=""
+            className="w-10 h-10 rounded-md"
+          />
+          <div
+            className={`
+              flex justify-between items-center
+              overflow-hidden transition-all ${sideBar.isOpen ? "w-52 ml-3" : "w-0"}
+          `}
+          >
+            <div className="leading-4">
+              <h4 className="font-semibold">John Doe</h4>
+              <span className="text-xs text-gray-600">johndoe@gmail.com</span>
+            </div>
+            <FiMoreVertical size={20}/>
+          </div>
+        </div>
+      </nav>
+    </aside>
   )
 }

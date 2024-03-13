@@ -12,10 +12,7 @@ const ManagerClient = () => {
 
   return (
     <div>
-      <div className="w-1/3">
-        <SideBar user={user} route={route}/>
-      </div>
-      <div></div>
+      tét
     </div>
   )
 }
