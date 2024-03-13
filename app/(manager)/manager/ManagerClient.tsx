@@ -2,7 +2,7 @@
 
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {useRouter} from "next/navigation";
-import SideBar from "@/app/components/SideBar";
+import SideBar from "@/app/components/sidebar/SideBar";
 
 const ManagerClient = () => {
   const user: any = useAuthUser()
@@ -13,7 +13,7 @@ const ManagerClient = () => {
   return (
     <div>
       <div className="w-1/3">
-        <SideBar/>
+        <SideBar user={user} route={route}/>
       </div>
       <div></div>
     </div>

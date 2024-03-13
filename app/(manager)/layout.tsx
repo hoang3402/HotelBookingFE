@@ -3,6 +3,8 @@ import {Nunito} from "next/font/google";
 import React from "react";
 import AuthProvider from "react-auth-kit";
 import store from "@/app/store";
+import ToasterProvider from "@/app/providers/ToasterProvider";
+import ClientOnly from "@/app/components/ClientOnly";
 
 export const metadata = {
   title: 'Dashboard Hotel booking',
@@ -22,7 +24,10 @@ export default function RootLayout({
     <AuthProvider store={store}>
       <html lang="en">
       <body className={font.className}>
-      {children}
+      <ClientOnly>
+        <ToasterProvider/>
+      </ClientOnly>
+      <div>{children}</div>
       </body>
       </html>
     </AuthProvider>
