@@ -48,10 +48,14 @@ const LoginModal = () => {
         body: JSON.stringify(data)
       }).then(res => res.json().then(data => {
         // console.log(data)
+        if (data.error) {
+          toast.error(data.error);
+          return;
+        }
 
         // decode
         const payload: any = jwtDecode(data.access)
-        
+
         if (signIn({
           auth: {
             token: data.access,
@@ -77,6 +81,7 @@ const LoginModal = () => {
         toast.success('Successfully logged in');
         loginModal.onClose();
       })).catch(error => {
+        // toast.error(error);
         console.log(error)
       }).finally(() => {
         setIsLoading(false);
