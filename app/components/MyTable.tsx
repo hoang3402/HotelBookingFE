@@ -6,7 +6,7 @@ const MyTable = ({columns, rows}: any) => {
       <TableHeader columns={columns}>
         {(column: any) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={rows}>
+      <TableBody items={rows} emptyContent={"No rows to display."}>
         {(item: any) => (
           <TableRow key={item.key}>
             {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
