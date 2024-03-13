@@ -1,3 +1,5 @@
+'use client';
+
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {useRouter} from "next/navigation";
 

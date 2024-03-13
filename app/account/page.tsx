@@ -21,13 +21,15 @@ export default function Page() {
             <p>Phone: {user?.phone}</p>
 
             {user?.role !== 'user' && (
-              <>
+              <div>
                 <p>Role: {user?.role}</p>
-                <Button
-                  onClick={() => {route.push('/manager')}}
-                  label={'Go to manager'}
-                />
-              </>
+                <div className={'w-[200px] my-4'}>
+                  <Button
+                    onClick={() => {route.push('/manager')}}
+                    label={'Go to manager'}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>

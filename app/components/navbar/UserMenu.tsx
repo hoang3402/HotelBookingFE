@@ -109,6 +109,7 @@ const UserMenu: React.FC = () => {
                   label="Logout"
                   onClick={()=>{
                     setIsOpen(false)
+                    route.push('/')
                     signOut()
                   }}
                 />
