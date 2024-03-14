@@ -13,7 +13,6 @@ import {FormattedPrice} from "@/app/components/Ultility";
 const RoomModal = () => {
   let roomModal = useRoomModal((state) => state)
   const token = useAuthHeader()
-  const [isLoading, setIsLoading] = useState(false)
   const [roomData, setRoomData] = useState<any>(null)
   const [selectedRange, setSelectedRange] = useState({
     startDate: new Date(),
@@ -33,8 +32,6 @@ const RoomModal = () => {
       setDisabledDates([])
       setTotalPrice("")
     }
-
-    setIsLoading(true)
 
     fetch(`${domain}api/days-available/`, {
       method: "POST",
@@ -65,7 +62,6 @@ const RoomModal = () => {
       })
       .catch(error => console.log(error))
 
-    setIsLoading(false)
   }, [roomModal.isOpen, selectedRange])
 
   const handleSelect = (ranges: any) => {
@@ -79,7 +75,6 @@ const RoomModal = () => {
     }
 
     console.log(`Start loading room modal ${roomModal.roomId}`)
-    setIsLoading(true)
 
     fetch(`${domain}api/room/${roomModal.roomId}/`, {
       method: "GET",
@@ -92,9 +87,6 @@ const RoomModal = () => {
       })
       .catch((error) => {
         console.log(error)
-      })
-      .finally(() => {
-        setIsLoading(false)
       })
   }, [roomModal.isOpen]);
 
@@ -125,7 +117,7 @@ const RoomModal = () => {
     <div className="flex flex-col gap-4">
       <div className={'flex flex-col'}>
         <h2 className={'text-xl'}>{roomData?.description}</h2>
-        <span>Room type: {roomData?.room_type.name}</span>
+        <span>Room type: {roomData?.room_type?.name}</span>
         <span>Sleeps: {roomData?.adults} adults {roomData?.children ? `and ${roomData?.children} children` : ""}</span>
       </div>
 

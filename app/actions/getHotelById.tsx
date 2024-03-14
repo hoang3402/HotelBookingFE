@@ -19,7 +19,7 @@ export default async function getHotelById(
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "reload"
+      cache: "no-store"
     }).then((res) => {
       return res.json()
     }).catch((error) => {

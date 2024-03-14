@@ -19,7 +19,7 @@ export default async function getRoomById(
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "reload"
+      cache: "no-store"
     }).then((res) => {
       return res.json()
     }).catch((error) => {

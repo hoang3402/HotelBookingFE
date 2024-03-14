@@ -52,9 +52,9 @@ export default function Page() {
                     ))}
                   </div>
                 </Tab>
-                <Tab key="completed" title="Completed">
+                <Tab key="confirmed" title="Confirmed">
                   <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
-                    {filteredBookings('Completed').map((booking: any) => (
+                    {filteredBookings('Confirmed').map((booking: any) => (
                       <BookingCard key={booking.id} booking={booking} route={route}/>
                     ))}
                   </div>

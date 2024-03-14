@@ -7,6 +7,8 @@ import ToasterProvider from "@/app/providers/ToasterProvider";
 import ClientOnly from "@/app/components/ClientOnly";
 import SideBar from "@/app/components/sidebar/SideBar";
 import {SidebarItem} from "@/app/components/sidebar/SideBarItem";
+import {FaHome, FaUserAlt} from "react-icons/fa";
+import {IoTicket} from "react-icons/io5";
 
 export const metadata = {
   title: 'Dashboard Hotel booking',
@@ -31,8 +33,9 @@ export default function RootLayout({
       </ClientOnly>
       <div className={'flex'}>
         <SideBar>
-          <SidebarItem text={'Home'} path={'/manager'}/>
-          <SidebarItem text={'Booking'} path={'/manager/booking'}/>
+          <SidebarItem icon={<FaHome/>} text={'Home'} path={'/manager'}/>
+          <SidebarItem icon={<IoTicket/>} text={'Booking'} path={'/manager/booking'}/>
+          <SidebarItem icon={<FaUserAlt/>} text={'User'} path={'/manager/user'}/>
         </SideBar>
         <div className={'flex-1'}>
           {children}

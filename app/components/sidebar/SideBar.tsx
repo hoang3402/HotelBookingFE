@@ -25,7 +25,7 @@ export default function SideBar({children}: any) {
           <div className="p-4 pb-2 flex justify-between items-center">
             <img
               src="/images/logo.png"
-              className={`overflow-hidden transition-all ${
+              className={`overflow-hidden transition-all cursor-pointer ${
                 sideBar.isOpen ? "w-32" : "w-0"
               }`}
               alt=""

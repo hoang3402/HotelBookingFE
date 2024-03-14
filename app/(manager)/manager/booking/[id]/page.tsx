@@ -13,32 +13,10 @@ import Button from "@/app/components/Button";
 import {DateRange} from "react-date-range";
 import Container from "@/app/components/Container";
 import {useRouter} from "next/navigation";
+import {BookingDataDetails} from "@/app/type";
 
 interface IParams {
   id?: string;
-}
-
-interface BookingDataDetails {
-  id: number
-  hotel: {
-    id: number
-    name: string
-    image: string
-  }
-  room: {
-    id: number
-    name: string
-    adults: number
-    children: number
-  }
-  check_in_date: string
-  check_out_date: string
-  total_price: string
-  created_at: string
-  updated_at: string
-  status: string
-  currency: string
-  total_price_usd: string
 }
 
 const StaffBookingDetailPage = ({params}: { params: IParams }) => {
@@ -106,7 +84,7 @@ const StaffBookingDetailPage = ({params}: { params: IParams }) => {
                   <p>Sleeps: {data.room.adults} adults {data.room.children ? `and ${data.room.children} children` : ""}</p>
                   <p>Created at: {FormattedDate(data.created_at)}</p>
                 </div>
-                <div className={'w-[400px] flex gap-4'}>
+                <div className={'w-2/3 flex gap-4 overflow-hidden'}>
                   <Button label={'Done'} onClick={handleDone}/>
                   <Button label={'Back'} onClick={handleBack}/>
                 </div>

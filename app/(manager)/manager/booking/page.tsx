@@ -8,6 +8,7 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loader from "@/app/components/Loader";
 import {FormattedPrice} from "@/app/components/Ultility";
 import NextAuth from "@auth-kit/next";
+import {BookingDataDetails} from "@/app/type";
 
 const columns = [
   {
@@ -60,7 +61,7 @@ const StaffBookingPage = () => {
     }).then(res => res.json())
       .then(res => {
         let _date: BookingData[] = []
-        res.forEach((item: any) => {
+        res.forEach((item: BookingDataDetails) => {
             _date.push({
               id: item.id,
               hotel: `${item.hotel.id} - ${item.hotel.name}`,
