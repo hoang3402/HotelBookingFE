@@ -43,7 +43,7 @@ export default function Page() {
           <div className="max-w-screen-lg mx-auto">
             <h1>You have {bookings.length} booking</h1>
             <br/>
-            <div>
+            <div className={'w-full flex flex-col justify-center items-center'}>
               <Tabs onSelect={handleTabChange}>
                 <Tab key="upcoming" title="Upcoming">
                   <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
