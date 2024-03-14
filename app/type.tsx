@@ -1,4 +1,3 @@
-
 export interface HotelData {
   id: number
   name: string
@@ -52,6 +51,16 @@ export interface HotelDataDetails {
       name: string
     }
   }[]
+}
+
+export interface BookingData {
+  id: number
+  hotel: string
+  room: string
+  check_in_date: string
+  check_out_date: string
+  total_price_usd: string
+  status: string
 }
 
 export interface BookingDataDetails {

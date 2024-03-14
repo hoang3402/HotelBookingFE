@@ -5,8 +5,11 @@ import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {HotelData} from "@/app/type";
+import {domain} from "@/app/actions/getRoomById";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import {getKeyValue} from "@nextui-org/table";
 
 const columns = [
   {
@@ -38,8 +41,24 @@ const columns = [
 const ManagerUserPage = () => {
 
   const user: any = useAuthUser()
+  const token = useAuthHeader()
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<HotelData[]>([])
+
+  useEffect(() => {
+    fetch(`${domain}api/hotel/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `${token}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data: HotelData[]) => {
+        setData(data)
+        setIsLoading(false)
+      })
+  }, [])
 
   return (
     <div>
@@ -52,7 +71,7 @@ const ManagerUserPage = () => {
                 {isLoading ? (
                   <Loader/>
                 ) : (
-                  <MyTable title={'Hotels'} columns={columns} rows={data}/>
+                  <MyTable title={'Hotels'} columns={columns} rows={data} renderCell={getKeyValue}/>
                 )}
               </div>
             </div>
