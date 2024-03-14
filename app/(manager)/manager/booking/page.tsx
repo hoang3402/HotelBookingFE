@@ -1,16 +1,13 @@
 'use client';
 
 import Container from "@/app/components/Container";
-import MyTable from "@/app/components/MyTable";
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import {Tooltip} from "@nextui-org/tooltip";
-import {useEffect, useState} from "react";
+import MyTable, {BookingData} from "@/app/components/MyTable";
+import React, {useEffect, useState} from "react";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loader from "@/app/components/Loader";
 import {FormattedPrice} from "@/app/components/Ultility";
 import NextAuth from "@auth-kit/next";
-
 
 const columns = [
   {
@@ -41,31 +38,15 @@ const columns = [
     key: "status",
     label: "Status",
   },
+  {
+    key: "action",
+    label: "Action",
+  },
 ]
-
-const actions = () => {
-  return <div className="relative flex items-center gap-2">
-    <Tooltip content="Details">
-      <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-        <EyeIcon/>
-      </span>
-    </Tooltip>
-    <Tooltip content="Edit">
-      <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-        <EditIcon/>
-      </span>
-    </Tooltip>
-    <Tooltip color="danger" content="Delete">
-      <span className="text-lg text-danger cursor-pointer active:opacity-50">
-        <DeleteIcon/>
-      </span>
-    </Tooltip>
-  </div>
-}
 
 const StaffBookingPage = () => {
   const token = useAuthHeader()
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<BookingData[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -78,7 +59,7 @@ const StaffBookingPage = () => {
       cache: 'reload'
     }).then(res => res.json())
       .then(res => {
-        let _date: any[] = []
+        let _date: BookingData[] = []
         res.forEach((item: any) => {
             _date.push({
               id: item.id,
@@ -97,6 +78,7 @@ const StaffBookingPage = () => {
       })
       .catch(error => console.error("Error fetching data:", error));
   }, [])
+
 
   return (
     <NextAuth fallbackPath={'/'}>
