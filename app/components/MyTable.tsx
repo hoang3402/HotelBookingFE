@@ -17,7 +17,7 @@ export interface BookingData {
   status: string
 }
 
-const action = (handleDetail: any, handleComfirm: any) => {
+const action = (handleDetail: any, handleConfirmed: any) => {
   return (
     <div className="relative flex items-center gap-2">
       <Tooltip content="Details">
@@ -31,7 +31,7 @@ const action = (handleDetail: any, handleComfirm: any) => {
       <Tooltip content="Comfirm">
         <span
           className="text-lg text-default-400 cursor-pointer active:opacity-50"
-          onClick={handleComfirm}
+          onClick={handleConfirmed}
         >
           <EditIcon/>
         </span>
