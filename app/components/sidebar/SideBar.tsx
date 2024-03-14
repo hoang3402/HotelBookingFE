@@ -5,11 +5,13 @@ import {LuChevronFirst, LuChevronLast} from "react-icons/lu";
 import {FiMoreVertical} from "react-icons/fi";
 import {useSideBar} from "@/app/hooks/useSideBar";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import {useRouter} from "next/navigation";
 
 export default function SideBar({children}: any) {
-  
+
   const sideBar = useSideBar()
   const user: any = useAuthUser()
+  const route = useRouter()
 
   return (
     <aside className="h-screen">
@@ -21,6 +23,7 @@ export default function SideBar({children}: any) {
               sideBar.isOpen ? "w-32" : "w-0"
             }`}
             alt=""
+            onClick={() => route.push('/')}
           />
           <button
             onClick={sideBar.toggle}
