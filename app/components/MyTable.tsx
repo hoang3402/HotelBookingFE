@@ -51,7 +51,7 @@ const MyTable = ({title, columns, rows}: any) => {
   }
 
   const handleConfirmed = (id: number) => {
-    fetch(`${domain}api/staff/booking/${id}/edit/`, {
+    fetch(`${domain}api/staff/booking/${id}/`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

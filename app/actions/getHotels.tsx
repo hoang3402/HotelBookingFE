@@ -41,7 +41,7 @@ export default async function getHotels(
         "check_in_date": startDate,
         "check_out_date": endDate
       }),
-      cache: "no-cache",
+      cache: "reload",
     }).then((res) => {
       return res.json()
     }).catch((error) => {
