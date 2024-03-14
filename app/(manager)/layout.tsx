@@ -29,13 +29,15 @@ export default function RootLayout({
       <ClientOnly>
         <ToasterProvider/>
       </ClientOnly>
-      <div className={'w-1/6'}>
+      <div className={'flex'}>
         <SideBar>
-          <SidebarItem text={'Home'}/>
-          <SidebarItem text={'Booking'}/>
+          <SidebarItem text={'Home'} path={'/manager'}/>
+          <SidebarItem text={'Booking'} path={'/manager/booking'}/>
         </SideBar>
+        <div className={'flex-1'}>
+          {children}
+        </div>
       </div>
-      <div>{children}</div>
       </body>
       </html>
     </AuthProvider>

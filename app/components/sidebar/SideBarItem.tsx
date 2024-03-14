@@ -1,10 +1,12 @@
 'use client';
 
 import {useSideBar} from "@/app/hooks/useSideBar";
+import { useRouter } from "next/navigation";
 
-export function SidebarItem({icon, text, active, alert}: any) {
+export function SidebarItem({icon, text, active, alert, path}: any) {
 
   const sideBar = useSideBar();
+  const route = useRouter();
 
   return (
     <li
@@ -18,6 +20,7 @@ export function SidebarItem({icon, text, active, alert}: any) {
           : "hover:bg-indigo-50 text-gray-600"
       }
     `}
+      onClick={()=>route.push(path)}
     >
       {icon}
       <span

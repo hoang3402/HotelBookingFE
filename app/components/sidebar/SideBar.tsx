@@ -4,10 +4,12 @@ import React from "react";
 import {LuChevronFirst, LuChevronLast} from "react-icons/lu";
 import {FiMoreVertical} from "react-icons/fi";
 import {useSideBar} from "@/app/hooks/useSideBar";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 export default function SideBar({children}: any) {
   
   const sideBar = useSideBar()
+  const user: any = useAuthUser()
 
   return (
     <aside className="h-screen">
@@ -34,7 +36,7 @@ export default function SideBar({children}: any) {
 
         <div className="border-t flex p-3">
           <img
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
+            src={`https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true&name=${user?.first_name}+${user?.last_name}`}
             alt=""
             className="w-10 h-10 rounded-md"
           />
@@ -45,8 +47,8 @@ export default function SideBar({children}: any) {
           `}
           >
             <div className="leading-4">
-              <h4 className="font-semibold">John Doe</h4>
-              <span className="text-xs text-gray-600">johndoe@gmail.com</span>
+              <h4 className="font-semibold">{user?.first_name} {user?.last_name}</h4>
+              <span className="text-xs text-gray-600">{user?.email}</span>
             </div>
             <FiMoreVertical size={20}/>
           </div>

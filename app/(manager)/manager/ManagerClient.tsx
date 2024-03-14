@@ -2,7 +2,7 @@
 
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {useRouter} from "next/navigation";
-import SideBar from "@/app/components/sidebar/SideBar";
+import Container from "@/app/components/Container";
 
 const ManagerClient = () => {
   const user: any = useAuthUser()
@@ -11,9 +11,11 @@ const ManagerClient = () => {
   if (user.role === 'user') route.push('/')
 
   return (
-    <div>
-      tét
-    </div>
+    <Container>
+      <div className={'flex justify-center items-center h-screen'}>
+        <span className={'text-3xl'}>Manager</span>
+      </div>
+    </Container>
   )
 }
 

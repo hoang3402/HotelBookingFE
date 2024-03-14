@@ -101,13 +101,15 @@ const StaffBookingPage = () => {
   return (
     <NextAuth fallbackPath={'/'}>
       <Container>
-        <h1>Booking</h1>
-        <div>
-          {isLoading ? (
-            <Loader/>
-          ) : (
-            <MyTable title={'Booking'} columns={columns} rows={data}/>
-          )}
+        <div className={'flex flex-col gap-4 mt-4'}>
+          <h1 className={'text-3xl font-bold'}>Booking</h1>
+          <div>
+            {isLoading ? (
+              <Loader/>
+            ) : (
+              <MyTable title={'Booking'} columns={columns} rows={data}/>
+            )}
+          </div>
         </div>
       </Container>
     </NextAuth>
