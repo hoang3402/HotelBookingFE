@@ -49,7 +49,7 @@ const MyTable = ({title, columns, rows}: any) => {
     route.push(`/manager/booking/${id}`)
   }
 
-  const handleComfirm = (id: number) => {
+  const handleConfirmed = (id: number) => {
     fetch(`${domain}api/staff/booking/${id}/edit/`, {
       method: "PATCH",
       headers: {
@@ -77,7 +77,7 @@ const MyTable = ({title, columns, rows}: any) => {
     const cellValue = data[columnKey as keyof BookingData];
     switch (columnKey) {
       case 'action':
-        return action(() => handleDetail(data.id), () => handleComfirm(data.id));
+        return action(() => handleDetail(data.id), () => handleConfirmed(data.id));
       default:
         return cellValue
     }
