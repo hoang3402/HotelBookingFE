@@ -12,7 +12,7 @@ import NextAuth from "@auth-kit/next";
 const columns = [
   {
     key: "id",
-    label: "Booking ID",
+    label: "ID",
   },
   {
     key: "hotel",

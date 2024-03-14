@@ -6,6 +6,7 @@ import {useRouter} from "next/navigation";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {toast} from "react-hot-toast";
+import Link from "next/link";
 
 export interface BookingData {
   id: number
@@ -76,6 +77,10 @@ const MyTable = ({title, columns, rows}: any) => {
   const renderCell = React.useCallback((data: BookingData, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof BookingData];
     switch (columnKey) {
+      case 'hotel':
+        return (
+          <Link href={`/hotel/${data.id}`}>{cellValue}</Link>
+        )
       case 'action':
         return action(() => handleDetail(data.id), () => handleConfirmed(data.id));
       default:
@@ -84,7 +89,7 @@ const MyTable = ({title, columns, rows}: any) => {
   }, [])
 
   return (
-    <Table isStriped aria-label={title}>
+    <Table isStriped aria-label={title} selectionMode="single" color={'primary'}>
       <TableHeader columns={columns}>
         {(column: any) => <TableColumn key={column?.key}>{column.label}</TableColumn>}
       </TableHeader>
