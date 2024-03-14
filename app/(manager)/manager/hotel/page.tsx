@@ -14,24 +14,20 @@ const columns = [
     label: "ID",
   },
   {
-    key: "first_name",
-    label: "First name",
+    key: "name",
+    label: "Name",
   },
   {
-    key: "last_name",
-    label: "Last name",
+    key: "phone_number",
+    label: "Phone number",
   },
   {
     key: "email",
     label: "Email",
   },
   {
-    key: "role",
-    label: "Role",
-  },
-  {
-    key: "status",
-    label: "Status",
+    key: "location",
+    label: "Location",
   },
   {
     key: "action",

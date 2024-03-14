@@ -7,7 +7,7 @@ import ToasterProvider from "@/app/providers/ToasterProvider";
 import ClientOnly from "@/app/components/ClientOnly";
 import SideBar from "@/app/components/sidebar/SideBar";
 import {SidebarItem} from "@/app/components/sidebar/SideBarItem";
-import {FaHome, FaUserAlt} from "react-icons/fa";
+import {FaHome, FaHotel, FaUserAlt} from "react-icons/fa";
 import {IoTicket} from "react-icons/io5";
 
 export const metadata = {
@@ -34,6 +34,7 @@ export default function RootLayout({
       <div className={'flex'}>
         <SideBar>
           <SidebarItem icon={<FaHome/>} text={'Home'} path={'/manager'}/>
+          <SidebarItem icon={<FaHotel/>} text={'Hotel'} path={'/manager/hotel'}/>
           <SidebarItem icon={<IoTicket/>} text={'Booking'} path={'/manager/booking'}/>
           <SidebarItem icon={<FaUserAlt/>} text={'User'} path={'/manager/user'}/>
         </SideBar>
