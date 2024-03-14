@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {LuChevronFirst, LuChevronLast} from "react-icons/lu";
 import {FiMoreVertical} from "react-icons/fi";
 import {useSideBar} from "@/app/hooks/useSideBar";
@@ -9,9 +9,14 @@ import {useRouter} from "next/navigation";
 
 export default function SideBar({children}: any) {
 
+  const [isClient, setIsClient] = useState(false)
   const sideBar = useSideBar()
   const user: any = useAuthUser()
   const route = useRouter()
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <aside className="h-screen">
@@ -37,25 +42,27 @@ export default function SideBar({children}: any) {
           <ul className="flex-1 px-3">{children}</ul>
         </div>
 
-        <div className="border-t flex p-3">
-          <img
-            src={`https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true&name=${user?.first_name}+${user?.last_name}`}
-            alt=""
-            className="w-10 h-10 rounded-md"
-          />
-          <div
-            className={`
+        {isClient ? (
+          <div className="border-t flex p-3">
+            <img
+              src={`https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true&name=${user?.first_name}+${user?.last_name}`}
+              alt=""
+              className="w-10 h-10 rounded-md"
+            />
+            <div
+              className={`
               flex justify-between items-center
               overflow-hidden transition-all ${sideBar.isOpen ? "w-52 ml-3" : "w-0"}
           `}
-          >
-            <div className="leading-4">
-              <h4 className="font-semibold">{user?.first_name} {user?.last_name}</h4>
-              <span className="text-xs text-gray-600">{user?.email}</span>
+            >
+              <div className="leading-4">
+                <h4 className="font-semibold">{user?.first_name} {user?.last_name}</h4>
+                <span className="text-xs text-gray-600">{user?.email}</span>
+              </div>
+              <FiMoreVertical size={20}/>
             </div>
-            <FiMoreVertical size={20}/>
           </div>
-        </div>
+        ) : (<></>)}
       </nav>
     </aside>
   )
