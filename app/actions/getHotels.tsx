@@ -2,13 +2,13 @@ import {domain} from "@/app/actions/getRoomById";
 
 export interface IListingsParams {
   keyword?: string;
-  provinceValue?: string;
-  cityValue?: string;
+  country?: string;
+  province?: string;
+  city?: string;
   adultsCount?: number;
   childrenCount?: number;
   startDate?: string;
   endDate?: string;
-  locationValue?: string;
 }
 
 export default async function getHotels(
@@ -19,9 +19,9 @@ export default async function getHotels(
       keyword,
       adultsCount,
       childrenCount,
-      locationValue,
-      provinceValue,
-      cityValue,
+      country,
+      province,
+      city,
       startDate,
       endDate,
     } = params;
@@ -35,9 +35,9 @@ export default async function getHotels(
         "keyword": keyword ? keyword : "",
         "adults": adultsCount ? adultsCount : 1,
         "children": childrenCount ? childrenCount : 0,
-        "country": locationValue,
-        "city": cityValue ? cityValue : "",
-        "province": provinceValue ? provinceValue : "",
+        "country": country,
+        "city": city ?? "",
+        "province": province ?? "",
         "check_in_date": startDate,
         "check_out_date": endDate
       }),

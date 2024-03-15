@@ -10,6 +10,7 @@ import RegisterModal from "@/app/components/modals/RegisterModal";
 import RoomModal from "@/app/components/modals/RoomModal";
 import AuthProvider from "react-auth-kit";
 import store from "@/app/store";
+import LocationsProvider from "@/app/providers/LocationsProvider";
 
 export const metadata = {
   title: 'Hotel booking',
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={font.className}>
       <ClientOnly>
         <ToasterProvider/>
+        <LocationsProvider/>
         <SearchModal/>
         <LoginModal/>
         <RegisterModal/>

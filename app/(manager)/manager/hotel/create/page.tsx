@@ -12,14 +12,14 @@ import {useLocation} from "@/app/hooks/useCountries";
 const CreateHotelPage = () => {
   const user: any = useAuthUser()
   const [isLoading, setIsLoading] = useState(false)
-  const {provinces, fetchProvinces} = useLocation()
+  const {countries, provinces, fetchCountries, fetchProvinces} = useLocation()
 
   useEffect(() => {
 
-    // Start get country
+    // Start get location
     fetchProvinces()
-
-    // End get country
+    fetchCountries()
+    // End get location
 
     setIsLoading(false)
   }, [])
@@ -52,8 +52,15 @@ const CreateHotelPage = () => {
                     isClearable
                   />
                   <Autocomplete
+                    defaultItems={countries}
+                    label="Province"
+                    className="max-w-xs"
+                  >
+                    {(province) => <AutocompleteItem key={province.code}>{province.name}</AutocompleteItem>}
+                  </Autocomplete>
+                  <Autocomplete
                     defaultItems={provinces}
-                    label="Favorite Animal"
+                    label="Province"
                     className="max-w-xs"
                   >
                     {(province) => <AutocompleteItem key={province.id}>{province.name}</AutocompleteItem>}

@@ -13,6 +13,13 @@ export interface Province {
 }
 
 
+export interface City {
+  code: string
+  name: string
+  province: Province | number
+}
+
+
 export interface RoomType {
   id: number
   name: string

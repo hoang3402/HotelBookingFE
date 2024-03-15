@@ -102,7 +102,7 @@ const ManagerUserPage = () => {
   }, [])
 
   const renderCell = React.useCallback((data: HotelData, columnKey: React.Key) => {
-    const cellValue = data[columnKey as keyof HotelData];
+    const cellValue: any = data[columnKey as keyof HotelData];
     switch (columnKey) {
       case 'name':
         return (

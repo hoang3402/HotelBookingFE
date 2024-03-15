@@ -2,7 +2,7 @@
 
 import Select from 'react-select'
 
-import React from "react";
+import React, {useEffect} from "react";
 import {useLocation} from "@/app/hooks/useCountries";
 
 const formatSelectCountry = (option: any) => (
@@ -31,14 +31,34 @@ const CountrySelect = ({
   valueCity?: any;
   onChangeCity: (value: any) => void;
 }) => {
-  const {getAll, getProvinceByCountry, getCityByProvince} = useLocation();
+  const {countries, provinces, cities, fetchCountries, fetchProvinces, fetchCities} = useLocation()
+
+  useEffect(() => {
+    if (!countries.length) {
+      fetchCountries()
+    }
+    if (!provinces.length) {
+      fetchProvinces()
+    }
+    if (!cities.length) {
+      fetchCities()
+    }
+  }, []);
+
+  const getProvinceByCountry = (code: string) => {
+    return provinces.filter((item: any) => item.country.code === code)
+  }
+
+  const getCityByProvince = (id: string) => {
+    return cities.filter((item: any) => item.province === id)
+  }
 
   return (
     <div className={'divide-y-8'}>
       <Select
         placeholder="Country"
         isClearable
-        options={getAll()}
+        options={countries}
         value={valueCountry}
         onChange={(value) => onChangeCountry(value)}
         formatOptionLabel={formatSelectCountry}

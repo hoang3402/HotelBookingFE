@@ -1,12 +1,12 @@
 import {domain} from "@/app/actions/getRoomById";
-import {Country, Province} from "@/app/type";
+import {City, Country, Province} from "@/app/type";
 
 import {create} from 'zustand';
 
 interface LocationStore {
   countries: Country[]
   provinces: Province[]
-  cities: any
+  cities: City[]
   fetchCountries: () => void
   fetchProvinces: () => void
   fetchCities: () => void

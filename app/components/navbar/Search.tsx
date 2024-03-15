@@ -11,20 +11,25 @@ import {useLocation} from "@/app/hooks/useCountries";
 const Search = () => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
-  const {getByValue} = useLocation();
+  const {countries, fetchCountries} = useLocation()
 
-  const locationValue = params?.get('locationValue');
+  const country = params?.get('country');
   const startDate = params?.get('startDate');
   const endDate = params?.get('endDate');
-  const guestCount = params?.get('guestCount');
+  const adultsCount = params?.get('adultsCount');
+  const childrenCount = params?.get('childrenCount');
+
 
   const locationLabel = useMemo(() => {
-    if (locationValue) {
-      return getByValue(locationValue)?.name;
+    if (country) {
+      if (!countries) {
+        fetchCountries()
+      }
+      return countries.find(value => value.code === country)?.name;
     }
 
     return 'Anywhere';
-  }, [locationValue, getByValue]);
+  }, [country, countries]);
 
   const durationLabel = useMemo(() => {
     if (startDate && endDate) {
@@ -43,12 +48,17 @@ const Search = () => {
   }, [startDate, endDate]);
 
   const guestLabel = useMemo(() => {
-    if (guestCount) {
-      return `${guestCount} Guests`;
+    if (adultsCount || childrenCount) {
+      try {
+        const count = parseInt(adultsCount as string) + parseInt(childrenCount as string);
+        return `${count} Guests`;
+      } catch (error) {
+        return 'Add Guests';
+      }
     }
 
     return 'Add Guests';
-  }, [guestCount]);
+  }, [adultsCount, childrenCount]);
 
   return (
     <div
