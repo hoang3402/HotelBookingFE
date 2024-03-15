@@ -16,6 +16,7 @@ import {EyeIcon} from "@nextui-org/shared-icons";
 import {MdOutlineDone} from "react-icons/md";
 import {HiMiniXMark} from "react-icons/hi2";
 import {useRouter} from "next/navigation";
+import {useCollator} from "@react-aria/i18n";
 
 const columns = [
   {
@@ -83,11 +84,22 @@ const action = (handleDetail: any, handleConfirmed: any, handleCancel: any) => {
   )
 }
 
+interface ITemp {
+  items: BookingData[]
+  sortDescriptor: any
+}
+
 const StaffBookingPage = () => {
   const token = useAuthHeader()
   const route = useRouter()
-  const [data, setData] = useState<BookingData[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [reload, setReload] = useState(0)
+  const collator = useCollator();
+  const [arr, setArr] = useState<ITemp>({
+    items: [],
+    sortDescriptor: {direction: "descending", column: "title"},
+  });
+
 
   const handleDetail = (id: number) => {
     route.push(`/manager/booking/${id}`)
@@ -114,6 +126,7 @@ const StaffBookingPage = () => {
         console.error("Error fetching data:", error);
         toast.error("Error: ", error)
       })
+      .finally(() => setReload(reload + 1))
   }
 
   const handleCancel = (id: number) => {
@@ -137,6 +150,7 @@ const StaffBookingPage = () => {
         console.error("Error fetching data:", error);
         toast.error("Error: ", error)
       })
+      .finally(() => setReload(reload + 1))
   }
 
   useEffect(() => {
@@ -162,13 +176,11 @@ const StaffBookingPage = () => {
             })
           }
         )
-        setData(_data)
+        setArr({items: _data, sortDescriptor: arr.sortDescriptor})
         setIsLoading(false);
-        console.log(data)
       })
       .catch(error => console.error("Error fetching data:", error));
-  }, [action])
-
+  }, [reload])
 
   const renderCell = React.useCallback((data: BookingData, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof BookingData];
@@ -184,6 +196,26 @@ const StaffBookingPage = () => {
     }
   }, [])
 
+  function sortArr() {
+    const {items, sortDescriptor} = arr;
+    items.sort((a, b) => {
+      let first = a[sortDescriptor.column as keyof any];
+      let second = b[sortDescriptor.column as keyof any];
+      let cmp = collator.compare(first, second);
+      if (sortDescriptor.direction === "descending") {
+        cmp *= -1;
+      }
+      return cmp;
+    });
+    setArr({
+      items,
+      sortDescriptor:
+        sortDescriptor.direction === "ascending"
+          ? {direction: "descending", column: "title"}
+          : {direction: "ascending", column: "title"},
+    });
+  }
+
   return (
     <NextAuth fallbackPath={'/'}>
       <Container>
@@ -193,7 +225,14 @@ const StaffBookingPage = () => {
             {isLoading ? (
               <Loader/>
             ) : (
-              <MyTable title={'Booking'} columns={columns} rows={data} renderCell={renderCell}/>
+              <MyTable
+                title={'Booking'}
+                columns={columns}
+                rows={arr.items}
+                renderCell={renderCell}
+                sort={sortArr}
+                sortDescriptor={arr.sortDescriptor}
+              />
             )}
           </div>
         </div>

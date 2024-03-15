@@ -16,6 +16,7 @@ import {HiMiniXMark} from "react-icons/hi2";
 import Button from "@/app/components/Button";
 import {useRouter} from "next/navigation";
 import {toast} from "react-hot-toast";
+import {SortDescriptor} from "@nextui-org/table";
 
 const columns = [
   {
@@ -68,10 +69,11 @@ const action = (handleDetail: any, handleDelete: any) => {
 }
 
 
-const ManagerUserPage = () => {
+const ManagerHotelPage = () => {
 
   const user: any = useAuthUser()
   const token = useAuthHeader()
+  const [reload, setReload] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<any[]>([])
   const route = useRouter()
@@ -91,6 +93,7 @@ const ManagerUserPage = () => {
         }
         toast.success('Delete hotel success!')
       })
+      .finally(() => setReload(reload + 1))
   }
 
   useEffect(() => {
@@ -117,7 +120,7 @@ const ManagerUserPage = () => {
         setData(_data)
         setIsLoading(false)
       })
-  }, [handleDelete])
+  }, [reload])
 
   const handleDetails = (id: number) => {
     route.push(`/manager/hotel/detail/${id}`)
@@ -137,6 +140,19 @@ const ManagerUserPage = () => {
     }
   }, [])
 
+  function sort(descriptor: SortDescriptor) {
+    data.sort((a: any, b: any) => {
+      if (a[descriptor.column as keyof any] < b[descriptor.column as keyof any]) {
+        return -1
+      }
+      if (a[descriptor.column as keyof any] > b[descriptor.column as keyof any]) {
+        return 1
+      }
+      return 0
+    })
+  }
+
+
   return (
     <div>
       {user?.role !== 'admin' ? (
@@ -153,7 +169,13 @@ const ManagerUserPage = () => {
                 {isLoading ? (
                   <Loader/>
                 ) : (
-                  <MyTable title={'Hotels'} columns={columns} rows={data} renderCell={renderCell}/>
+                  <MyTable
+                    title={'Hotels'}
+                    columns={columns}
+                    rows={data}
+                    renderCell={renderCell}
+                    sort={sort}
+                  />
                 )}
               </div>
             </div>
@@ -164,4 +186,4 @@ const ManagerUserPage = () => {
   )
 }
 
-export default ManagerUserPage
+export default ManagerHotelPage
