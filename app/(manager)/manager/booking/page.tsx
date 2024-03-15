@@ -149,9 +149,9 @@ const StaffBookingPage = () => {
       cache: 'reload'
     }).then(res => res.json())
       .then(res => {
-        let _date: BookingData[] = []
+        let _data: BookingData[] = []
         res.forEach((item: BookingDataDetails) => {
-            _date.push({
+            _data.push({
               id: item.id,
               hotel: `${item.hotel.id} - ${item.hotel.name}`,
               room: `${item.room.id} - ${item.room.name}`,
@@ -162,12 +162,12 @@ const StaffBookingPage = () => {
             })
           }
         )
-        setData(_date)
+        setData(_data)
         setIsLoading(false);
         console.log(data)
       })
       .catch(error => console.error("Error fetching data:", error));
-  }, [handleConfirmed, handleCancel])
+  }, [action])
 
 
   const renderCell = React.useCallback((data: BookingData, columnKey: React.Key) => {

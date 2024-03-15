@@ -11,6 +11,7 @@ import Calendar from "../inputs/Calendar";
 import Counter from "../inputs/Counter";
 import CountrySelect from "../inputs/CountrySelect";
 import Heading from '../Heading';
+import {Country, Province} from "@/app/type";
 
 enum STEPS {
   KEYWORD = 0,
@@ -27,8 +28,8 @@ const SearchModal = () => {
   const [step, setStep] = useState(STEPS.KEYWORD);
 
   const [keyword, setKeyword] = useState<string>();
-  const [country, setCountry] = useState<any>();
-  const [province, setProvince] = useState<any>();
+  const [country, setCountry] = useState<Country>();
+  const [province, setProvince] = useState<Province>();
   const [city, setCity] = useState<any>();
   const [adultsCount, setAdultsCount] = useState(1);
   const [childrenCount, setChildrenCount] = useState(0);

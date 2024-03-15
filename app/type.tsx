@@ -1,3 +1,24 @@
+export interface Country {
+  code: string
+  name: string
+  currency: string
+}
+
+
+export interface Province {
+  id: number
+  slug: string
+  name: string
+  country: Country
+}
+
+
+export interface RoomType {
+  id: number
+  name: string
+}
+
+
 export interface HotelData {
   id: number
   name: string
@@ -5,17 +26,9 @@ export interface HotelData {
   average_rating: number
   email: string
   image: string
-  province: {
-    id: number
-    slug: string
-    name: string
-    country: {
-      code: string
-      name: string
-      currency: string
-    }
-  }
+  province: Province
 }
+
 
 export interface HotelDataDetails {
   id: number
@@ -26,32 +39,13 @@ export interface HotelDataDetails {
   average_rating: number
   email: string
   image: string
-  province: {
-    id: number
-    slug: string
-    name: string
-    country: {
-      code: string
-      name: string
-      currency: string
-    }
-  }
+  province: Province
   features: {
     description: string
   }[]
-  room_set: {
-    id: number
-    name: string
-    description: string
-    price: string
-    image: string
-    is_available: boolean
-    room_type: {
-      id: number
-      name: string
-    }
-  }[]
+  room_set: HotelData[]
 }
+
 
 export interface BookingData {
   id: number
@@ -62,6 +56,7 @@ export interface BookingData {
   total_price_usd: string
   status: string
 }
+
 
 export interface BookingDataDetails {
   id: number
@@ -84,4 +79,16 @@ export interface BookingDataDetails {
     adults: number
     children: number
   }
+}
+
+
+export interface RoomData {
+  id: number
+  name: string
+  description: string
+  price: string
+  image: string
+  is_available: boolean
+  room_type: RoomType
+  hotel: HotelData
 }

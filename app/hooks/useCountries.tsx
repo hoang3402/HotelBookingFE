@@ -1,61 +1,35 @@
-import {useEffect, useState} from 'react';
 import {domain} from "@/app/actions/getRoomById";
+import {Country, Province} from "@/app/type";
 
-export const useLocation = () => {
-  const [countries, setCountries] = useState<any[]>([]);
-  const [provinces, setProvinces] = useState<any[]>([]);
-  const [cities, setCities] = useState<any[]>([]);
+import {create} from 'zustand';
 
-  useEffect(() => {
-    fetch(`${domain}api/country/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCountries(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching countries:', error);
-      });
+interface LocationStore {
+  countries: Country[]
+  provinces: Province[]
+  cities: any
+  fetchCountries: () => void
+  fetchProvinces: () => void
+  fetchCities: () => void
+}
 
-    fetch(`${domain}api/province/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProvinces(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching provinces:', error);
-      });
+export const useLocation = create<LocationStore>((set) => ({
+  countries: [],
+  provinces: [],
+  cities: [],
+  fetchCountries: async () => {
+    const res = await fetch(`${domain}api/country/`);
+    const data = await res.json();
+    set({countries: data});
+  },
+  fetchProvinces: async () => {
+    const res = await fetch(`${domain}api/province/`);
+    const data = await res.json();
+    set({provinces: data});
+  },
+  fetchCities: async () => {
+    const res = await fetch(`${domain}api/city/`);
+    const data = await res.json();
+    set({cities: data});
+  },
+}));
 
-    fetch(`${domain}api/city/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCities(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching cities:', error);
-      });
-  }, []);
-
-  const getAll = () => {
-    return countries;
-  };
-
-  const getByValue = (value: any) => {
-    return countries.find((item) => item.code === value);
-  };
-
-  const getProvinceByCountry = (value: any) => {
-    return provinces.filter((item) => item.country.code === value);
-  };
-
-  const getCityByProvince = (value: any) => {
-    return cities.filter((item) => item.province === value);
-  };
-
-  return {
-    countries,
-    getAll,
-    getByValue,
-    getProvinceByCountry,
-    getCityByProvince
-  };
-};

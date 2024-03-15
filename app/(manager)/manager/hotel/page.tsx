@@ -9,7 +9,12 @@ import React, {useEffect, useState} from "react";
 import {HotelData} from "@/app/type";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import {getKeyValue} from "@nextui-org/table";
+import Link from "next/link";
+import {Tooltip} from "@nextui-org/tooltip";
+import {EyeIcon} from "@nextui-org/shared-icons";
+import {HiMiniXMark} from "react-icons/hi2";
+import Button from "@/app/components/Button";
+import {useRouter} from "next/navigation";
 
 const columns = [
   {
@@ -38,12 +43,37 @@ const columns = [
   },
 ]
 
+const action = (handleDetail: any, handleDelete: any) => {
+  return (
+    <div className="relative flex items-center gap-2">
+      <Tooltip content="Details">
+        <span
+          className="text-lg text-default-400 cursor-pointer active:opacity-50"
+          onClick={handleDetail}
+        >
+          <EyeIcon/>
+        </span>
+      </Tooltip>
+      <Tooltip content="Delete">
+        <span
+          className="text-lg text-default-400 cursor-pointer active:opacity-50"
+          onClick={handleDelete}
+        >
+          <HiMiniXMark color={"red"}/>
+        </span>
+      </Tooltip>
+    </div>
+  )
+}
+
+
 const ManagerUserPage = () => {
 
   const user: any = useAuthUser()
   const token = useAuthHeader()
   const [isLoading, setIsLoading] = useState(true)
-  const [data, setData] = useState<HotelData[]>([])
+  const [data, setData] = useState<any[]>([])
+  const route = useRouter()
 
   useEffect(() => {
     fetch(`${domain}api/hotel/`, {
@@ -55,23 +85,53 @@ const ManagerUserPage = () => {
     })
       .then((res) => res.json())
       .then((data: HotelData[]) => {
-        setData(data)
+        let _data: any = []
+        data.forEach(item => {
+          _data.push({
+            id: item.id,
+            name: item.name,
+            phone_number: item.phone_number,
+            email: item.email,
+            location: `${item.province.name} - ${item.province.country.name}`,
+            action: item.id
+          })
+        })
+        setData(_data)
         setIsLoading(false)
       })
   }, [])
 
+  const renderCell = React.useCallback((data: HotelData, columnKey: React.Key) => {
+    const cellValue = data[columnKey as keyof HotelData];
+    switch (columnKey) {
+      case 'name':
+        return (
+          <Link href={`/hotel/${data.id}`}>{cellValue}</Link>
+        )
+      case 'action':
+        return action(data.id, data.id);
+      default:
+        return cellValue
+    }
+  }, [])
+
   return (
     <div>
-      {user?.role !== 'admin' ? <h1>Permission denied</h1> : (
+      {user?.role !== 'admin' ? (
+        <div className={'flex justify-center items-center h-screen'}>
+          <span className={'text-3xl'}>You don't have permission</span>
+        </div>
+      ) : (
         <NextAuth fallbackPath={'/'}>
           <Container>
             <div className={'flex flex-col gap-4 mt-4'}>
               <h1 className={'text-3xl font-bold'}>Hotels</h1>
+              <Button label={'Create new hotel'} onClick={() => route.push('/manager/hotel/create')}/>
               <div>
                 {isLoading ? (
                   <Loader/>
                 ) : (
-                  <MyTable title={'Hotels'} columns={columns} rows={data} renderCell={getKeyValue}/>
+                  <MyTable title={'Hotels'} columns={columns} rows={data} renderCell={renderCell}/>
                 )}
               </div>
             </div>

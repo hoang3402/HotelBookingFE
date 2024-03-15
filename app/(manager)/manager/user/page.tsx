@@ -5,7 +5,7 @@ import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 const columns = [
   {
@@ -44,9 +44,17 @@ const ManagerUserPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<any[]>([])
 
+  useEffect(() => {
+    setIsLoading(false)
+  }, [])
+
   return (
     <div>
-      {user?.role !== 'admin' ? <h1>Permission denied</h1> : (
+      {user?.role !== 'admin' ? (
+        <div className={'flex justify-center items-center h-screen'}>
+          <span className={'text-3xl'}>You don't have permission</span>
+        </div>
+      ) : (
         <NextAuth fallbackPath={'/'}>
           <Container>
             <div className={'flex flex-col gap-4 mt-4'}>
