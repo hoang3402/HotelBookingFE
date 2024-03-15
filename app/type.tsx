@@ -16,7 +16,7 @@ export interface Province {
 export interface City {
   code: string
   name: string
-  province: Province | number
+  province: Province
 }
 
 

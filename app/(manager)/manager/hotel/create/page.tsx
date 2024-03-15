@@ -8,21 +8,37 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {Input} from "@nextui-org/input";
 import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import {useLocation} from "@/app/hooks/useCountries";
+import {Province} from "@/app/type";
+import {IKContext, IKImage, IKUpload} from "imagekitio-react";
 
 const CreateHotelPage = () => {
   const user: any = useAuthUser()
   const [isLoading, setIsLoading] = useState(false)
-  const {countries, provinces, fetchCountries, fetchProvinces} = useLocation()
+  const {countries, provinces, cities} = useLocation()
+  const [country, setCountry] = useState<any>()
+  const [province, setProvince] = useState<any>()
+  const [city, setCity] = useState<any>()
 
   useEffect(() => {
-
-    // Start get location
-    fetchProvinces()
-    fetchCountries()
-    // End get location
-
     setIsLoading(false)
   }, [])
+
+  useEffect(() => {
+    setProvince(undefined)
+    setCity(undefined)
+  }, [country])
+
+  useEffect(() => {
+    setCity(undefined)
+  }, [province])
+
+  const getProvinceByCountry = (code: string) => {
+    return provinces.filter((item: Province) => item.country.code === code)
+  }
+
+  const getCityByProvince = (id: number) => {
+    return cities.filter((item: any) => item.province == id)
+  }
 
   return <div>
     {user?.role !== 'admin' ? (
@@ -53,17 +69,38 @@ const CreateHotelPage = () => {
                   />
                   <Autocomplete
                     defaultItems={countries}
-                    label="Province"
+                    label="Country"
                     className="max-w-xs"
+                    selectedKey={country}
+                    onSelectionChange={setCountry}
                   >
-                    {(province) => <AutocompleteItem key={province.code}>{province.name}</AutocompleteItem>}
+                    {(country) => <AutocompleteItem key={country.code}>{country.name}</AutocompleteItem>}
                   </Autocomplete>
+
                   <Autocomplete
                     defaultItems={provinces}
                     label="Province"
                     className="max-w-xs"
+                    selectedKey={province}
+                    onSelectionChange={setProvince}
                   >
-                    {(province) => <AutocompleteItem key={province.id}>{province.name}</AutocompleteItem>}
+                    {getProvinceByCountry(country).map((province) =>
+                      <AutocompleteItem key={province.id}>
+                        {province.name}
+                      </AutocompleteItem>)}
+                  </Autocomplete>
+
+                  <Autocomplete
+                    defaultItems={cities}
+                    label="City"
+                    className="max-w-xs"
+                    selectedKey={city}
+                    onSelectionChange={setCity}
+                  >
+                    {getCityByProvince(province).map((_city) =>
+                      <AutocompleteItem key={_city.code}>
+                        {_city.name}
+                      </AutocompleteItem>)}
                   </Autocomplete>
                 </div>
               )}

@@ -9,6 +9,7 @@ import SideBar from "@/app/components/sidebar/SideBar";
 import {SidebarItem} from "@/app/components/sidebar/SideBarItem";
 import {FaHome, FaHotel, FaUserAlt} from "react-icons/fa";
 import {IoTicket} from "react-icons/io5";
+import LocationsProvider from "@/app/providers/LocationsProvider";
 
 export const metadata = {
   title: 'Dashboard Hotel booking',
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className={font.className}>
       <ClientOnly>
         <ToasterProvider/>
+        <LocationsProvider/>
       </ClientOnly>
       <div className={'flex'}>
         <SideBar>
