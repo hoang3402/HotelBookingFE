@@ -15,6 +15,7 @@ import {EyeIcon} from "@nextui-org/shared-icons";
 import {HiMiniXMark} from "react-icons/hi2";
 import Button from "@/app/components/Button";
 import {useRouter} from "next/navigation";
+import {toast} from "react-hot-toast";
 
 const columns = [
   {
@@ -75,6 +76,23 @@ const ManagerUserPage = () => {
   const [data, setData] = useState<any[]>([])
   const route = useRouter()
 
+  const handleDelete = (id: number) => {
+    fetch(`${domain}api/hotel/${id}/delete/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      }
+    }).then(res => res.json())
+      .then(data => {
+        if (data.detail) {
+          toast.error(data.detail)
+          return
+        }
+        toast.success('Delete hotel success!')
+      })
+  }
+
   useEffect(() => {
     fetch(`${domain}api/hotel/`, {
       method: "GET",
@@ -99,7 +117,11 @@ const ManagerUserPage = () => {
         setData(_data)
         setIsLoading(false)
       })
-  }, [])
+  }, [handleDelete])
+
+  const handleDetails = (id: number) => {
+    route.push(`/manager/hotel/detail/${id}`)
+  }
 
   const renderCell = React.useCallback((data: HotelData, columnKey: React.Key) => {
     const cellValue: any = data[columnKey as keyof HotelData];
@@ -109,7 +131,7 @@ const ManagerUserPage = () => {
           <Link href={`/hotel/${data.id}`}>{cellValue}</Link>
         )
       case 'action':
-        return action(data.id, data.id);
+        return action(() => handleDetails(data.id), () => handleDelete(data.id));
       default:
         return cellValue
     }
@@ -126,7 +148,7 @@ const ManagerUserPage = () => {
           <Container>
             <div className={'flex flex-col gap-4 mt-4'}>
               <h1 className={'text-3xl font-bold'}>Hotels</h1>
-              <Button label={'Create new hotel'} onClick={() => route.push('/manager/hotel/create')}/>
+              <Button label={'Create new hotel'} onClick={() => route.push('/manager/hotel/detail/0')}/>
               <div>
                 {isLoading ? (
                   <Loader/>
