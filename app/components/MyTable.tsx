@@ -1,19 +1,35 @@
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
-import React from "react";
+import React, {useMemo} from "react";
 
 
-const MyTable = ({title, columns, rows, renderCell, sort, sortDescriptor}: any) => {
+const MyTable = ({title, columns, rows, renderCell, setSortDescriptor, sortDescriptor}: any) => {
 
+  const sortedItems = useMemo(() => {
+    return [...rows].sort((a: any, b: any) => {
+      const first = a[sortDescriptor.column as keyof any] as string
+      const second = b[sortDescriptor.column as keyof any] as string
+      const cmp = first < second ? -1 : first > second ? 1 : 0
+
+      return sortDescriptor.direction === 'descending' ? -cmp : cmp
+    })
+  }, [sortDescriptor, rows])
 
   return (
-    <Table isStriped aria-label={title} onSortChange={sort} sortDescriptor={sortDescriptor}>
+    <Table
+      isStriped
+      aria-label={title}
+      sortDescriptor={sortDescriptor}
+      onSortChange={setSortDescriptor}
+    >
       <TableHeader columns={columns}>
-        {(column: any) => <TableColumn key={column?.key} allowsSorting>{column.label}</TableColumn>}
+        {(column: any) =>
+          <TableColumn key={column?.key} allowsSorting>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={rows} emptyContent={"No rows to display."}>
+      <TableBody items={sortedItems} emptyContent={"No rows to display."}>
         {(item: any) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) =>
+              <TableCell>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}
       </TableBody>

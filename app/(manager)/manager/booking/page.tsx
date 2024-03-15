@@ -16,7 +16,7 @@ import {EyeIcon} from "@nextui-org/shared-icons";
 import {MdOutlineDone} from "react-icons/md";
 import {HiMiniXMark} from "react-icons/hi2";
 import {useRouter} from "next/navigation";
-import {useCollator} from "@react-aria/i18n";
+import {SortDescriptor} from "@nextui-org/table";
 
 const columns = [
   {
@@ -84,21 +84,17 @@ const action = (handleDetail: any, handleConfirmed: any, handleCancel: any) => {
   )
 }
 
-interface ITemp {
-  items: BookingData[]
-  sortDescriptor: any
-}
 
 const StaffBookingPage = () => {
   const token = useAuthHeader()
   const route = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [reload, setReload] = useState(0)
-  const collator = useCollator();
-  const [arr, setArr] = useState<ITemp>({
-    items: [],
-    sortDescriptor: {direction: "descending", column: "title"},
-  });
+  const [data, setData] = useState<any[]>([])
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: 'id',
+    direction: 'descending'
+  })
 
 
   const handleDetail = (id: number) => {
@@ -176,7 +172,7 @@ const StaffBookingPage = () => {
             })
           }
         )
-        setArr({items: _data, sortDescriptor: arr.sortDescriptor})
+        setData(_data)
         setIsLoading(false);
       })
       .catch(error => console.error("Error fetching data:", error));
@@ -196,25 +192,6 @@ const StaffBookingPage = () => {
     }
   }, [])
 
-  function sortArr() {
-    const {items, sortDescriptor} = arr;
-    items.sort((a, b) => {
-      let first = a[sortDescriptor.column as keyof any];
-      let second = b[sortDescriptor.column as keyof any];
-      let cmp = collator.compare(first, second);
-      if (sortDescriptor.direction === "descending") {
-        cmp *= -1;
-      }
-      return cmp;
-    });
-    setArr({
-      items,
-      sortDescriptor:
-        sortDescriptor.direction === "ascending"
-          ? {direction: "descending", column: "title"}
-          : {direction: "ascending", column: "title"},
-    });
-  }
 
   return (
     <NextAuth fallbackPath={'/'}>
@@ -228,10 +205,10 @@ const StaffBookingPage = () => {
               <MyTable
                 title={'Booking'}
                 columns={columns}
-                rows={arr.items}
+                rows={data}
                 renderCell={renderCell}
-                sort={sortArr}
-                sortDescriptor={arr.sortDescriptor}
+                sortDescriptor={sortDescriptor}
+                setSortDescriptor={setSortDescriptor}
               />
             )}
           </div>

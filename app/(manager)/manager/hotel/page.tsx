@@ -5,7 +5,7 @@ import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {HotelData} from "@/app/type";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -73,10 +73,14 @@ const ManagerHotelPage = () => {
 
   const user: any = useAuthUser()
   const token = useAuthHeader()
+  const route = useRouter()
   const [reload, setReload] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<any[]>([])
-  const route = useRouter()
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: 'id',
+    direction: 'descending'
+  })
 
   const handleDelete = (id: number) => {
     fetch(`${domain}api/hotel/${id}/delete/`, {
@@ -140,18 +144,6 @@ const ManagerHotelPage = () => {
     }
   }, [])
 
-  function sort(descriptor: SortDescriptor) {
-    data.sort((a: any, b: any) => {
-      if (a[descriptor.column as keyof any] < b[descriptor.column as keyof any]) {
-        return -1
-      }
-      if (a[descriptor.column as keyof any] > b[descriptor.column as keyof any]) {
-        return 1
-      }
-      return 0
-    })
-  }
-
 
   return (
     <div>
@@ -174,7 +166,8 @@ const ManagerHotelPage = () => {
                     columns={columns}
                     rows={data}
                     renderCell={renderCell}
-                    sort={sort}
+                    sortDescriptor={sortDescriptor}
+                    setSortDescriptor={setSortDescriptor}
                   />
                 )}
               </div>
