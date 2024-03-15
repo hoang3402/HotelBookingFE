@@ -9,7 +9,7 @@ import {Input} from "@nextui-org/input";
 import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import {useLocation} from "@/app/hooks/useCountries";
 import {Province} from "@/app/type";
-import {IKContext, IKImage, IKUpload} from "imagekitio-react";
+import FileUploader from "@/app/components/FileUploader";
 
 const CreateHotelPage = () => {
   const user: any = useAuthUser()
@@ -102,6 +102,21 @@ const CreateHotelPage = () => {
                         {_city.name}
                       </AutocompleteItem>)}
                   </Autocomplete>
+
+                  <div>
+                    <h1 className="text-2xl font-bold">File Uploader</h1>
+                    <FileUploader
+                      url={`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_API_KEY_IMAGE_HOST}`}
+                      acceptedFileTypes={[
+                        "image/png",
+                        "image/jpeg",
+                      ]}
+                      allowMultiple={false}
+                      maxFileSize={100}
+                      labelAlt="Accepted File Types: png, jpeg"
+                    />
+                  </div>
+
                 </div>
               )}
             </div>
