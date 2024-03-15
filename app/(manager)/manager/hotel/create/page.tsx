@@ -18,6 +18,7 @@ const CreateHotelPage = () => {
   const [country, setCountry] = useState<any>()
   const [province, setProvince] = useState<any>()
   const [city, setCity] = useState<any>()
+  const [image, setImage] = useState<string>()
 
   useEffect(() => {
     setIsLoading(false)
@@ -67,54 +68,61 @@ const CreateHotelPage = () => {
                     type={"name"}
                     isClearable
                   />
-                  <Autocomplete
-                    defaultItems={countries}
-                    label="Country"
-                    className="max-w-xs"
-                    selectedKey={country}
-                    onSelectionChange={setCountry}
-                  >
-                    {(country) => <AutocompleteItem key={country.code}>{country.name}</AutocompleteItem>}
-                  </Autocomplete>
 
-                  <Autocomplete
-                    defaultItems={provinces}
-                    label="Province"
-                    className="max-w-xs"
-                    selectedKey={province}
-                    onSelectionChange={setProvince}
-                  >
-                    {getProvinceByCountry(country).map((province) =>
-                      <AutocompleteItem key={province.id}>
-                        {province.name}
-                      </AutocompleteItem>)}
-                  </Autocomplete>
+                  <div className={'flex gap-10'}>
+                    <div className={'flex flex-col gap-4'}>
+                      <Autocomplete
+                        defaultItems={countries}
+                        label="Country"
+                        className="max-w-xs"
+                        selectedKey={country}
+                        onSelectionChange={setCountry}
+                      >
+                        {(country) => <AutocompleteItem key={country.code}>{country.name}</AutocompleteItem>}
+                      </Autocomplete>
 
-                  <Autocomplete
-                    defaultItems={cities}
-                    label="City"
-                    className="max-w-xs"
-                    selectedKey={city}
-                    onSelectionChange={setCity}
-                  >
-                    {getCityByProvince(province).map((_city) =>
-                      <AutocompleteItem key={_city.code}>
-                        {_city.name}
-                      </AutocompleteItem>)}
-                  </Autocomplete>
+                      <Autocomplete
+                        defaultItems={provinces}
+                        label="Province"
+                        className="max-w-xs"
+                        selectedKey={province}
+                        onSelectionChange={setProvince}
+                      >
+                        {getProvinceByCountry(country).map((province) =>
+                          <AutocompleteItem key={province.id}>
+                            {province.name}
+                          </AutocompleteItem>)}
+                      </Autocomplete>
 
-                  <div>
-                    <h1 className="text-2xl font-bold">File Uploader</h1>
-                    <FileUploader
-                      url={`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_API_KEY_IMAGE_HOST}`}
-                      acceptedFileTypes={[
-                        "image/png",
-                        "image/jpeg",
-                      ]}
-                      allowMultiple={false}
-                      maxFileSize={100}
-                      labelAlt="Accepted File Types: png, jpeg"
-                    />
+                      <Autocomplete
+                        defaultItems={cities}
+                        label="City"
+                        className="max-w-xs"
+                        selectedKey={city}
+                        onSelectionChange={setCity}
+                      >
+                        {getCityByProvince(province).map((_city) =>
+                          <AutocompleteItem key={_city.code}>
+                            {_city.name}
+                          </AutocompleteItem>)}
+                      </Autocomplete>
+                    </div>
+
+                    <div>
+                      <span className="">Image</span>
+                      <FileUploader
+                        url={`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_API_KEY_IMAGE_HOST}`}
+                        acceptedFileTypes={[
+                          "image/png",
+                          "image/jpeg",
+                        ]}
+                        allowMultiple={false}
+                        maxFileSize={100}
+                        labelAlt="Accepted File Types: png, jpeg"
+                        image={image}
+                        setImage={setImage}
+                      />
+                    </div>
                   </div>
 
                 </div>
