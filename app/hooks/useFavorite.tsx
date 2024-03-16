@@ -6,7 +6,7 @@ import {toast} from "react-hot-toast";
 import useLoginModal from "./useLoginModal";
 
 interface IUseFavorite {
-  listingId: string;
+  listingId: string | any
   currentUser?: any
 }
 
@@ -29,16 +29,6 @@ const useFavorite = ({listingId, currentUser}: IUseFavorite) => {
       }
 
       try {
-        let request;
-
-        // if (hasFavorited) {
-        //   request = () => axios.delete(`/api/favorites/${listingId}`);
-        // } else {
-        //   request = () => axios.post(`/api/favorites/${listingId}`);
-        // }
-        //
-        // await request();
-        // router.refresh();
         toast.success('Success');
       } catch (error) {
         toast.error('Something went wrong.');

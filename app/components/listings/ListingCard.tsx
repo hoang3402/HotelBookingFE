@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import React, {useCallback, useMemo} from "react";
-import {format} from 'date-fns';
+import React, {useCallback} from "react";
 import HeartButton from "../HeartButton";
 import Button from "../Button";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import {HotelData} from "@/app/type";
 
 interface ListingCardProps {
-  data: any;
+  data: HotelData;
   reservation?: any;
   onAction?: (id: string) => void;
   disabled?: boolean;
@@ -19,7 +19,6 @@ interface ListingCardProps {
 
 const ListingCard: React.FC<ListingCardProps> = ({
                                                    data,
-                                                   reservation,
                                                    onAction,
                                                    disabled,
                                                    actionLabel,
@@ -78,11 +77,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-lg">
-          {/*{location?.region}, {location?.label}*/}
           {data.name}
         </div>
         <div className="font-light text-neutral-500">
-          {/*{reservationDate || data.category}*/}
           {data.province.name}, {data.province.country.name}
         </div>
         {onAction && actionLabel && (

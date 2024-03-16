@@ -9,6 +9,7 @@ export interface IListingsParams {
   childrenCount?: number;
   startDate?: string;
   endDate?: string;
+  page?: number;
 }
 
 export default async function getHotels(
@@ -24,6 +25,7 @@ export default async function getHotels(
       city,
       startDate,
       endDate,
+      page
     } = params;
 
     return fetch(`${domain}api/search/`, {

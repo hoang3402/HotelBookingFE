@@ -6,7 +6,7 @@ import useFavorite from "@/app/hooks/useFavorite";
 import React from "react";
 
 interface HeartButtonProps {
-  listingId: string
+  listingId: string | number
   currentUser?: any
 }
 
