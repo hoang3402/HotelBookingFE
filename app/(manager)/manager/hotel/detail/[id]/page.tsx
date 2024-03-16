@@ -8,7 +8,7 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {Input, Textarea} from "@nextui-org/input";
 import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import {useLocation} from "@/app/hooks/useCountries";
-import {Province} from "@/app/type";
+import {Province, User} from "@/app/type";
 import FileUploader from "@/app/components/FileUploader";
 import Button from "@/app/components/Button";
 import {useRouter} from "next/navigation";
@@ -21,7 +21,7 @@ interface IParams {
 }
 
 const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
-  const user: any = useAuthUser()
+  const user: User | null = useAuthUser()
   const token = useAuthHeader()
   const route = useRouter()
   const id = params.id
@@ -162,7 +162,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
 
   return (
     <div>
-      {user?.role !== 'admin' ? (
+      {(user && user.role) !== 'admin' ? (
         <div className={'flex justify-center items-center h-screen'}>
           <span className={'text-3xl'}>You don't have permission</span>
         </div>

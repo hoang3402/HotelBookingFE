@@ -50,7 +50,7 @@ const ManagerRoomsPage = () => {
 
   return (
     <div>
-      {user?.role !== 'admin' ? (
+      {(user && user.role) !== 'admin' ? (
         <div className={'flex justify-center items-center h-screen'}>
           <span className={'text-3xl'}>You don't have permission</span>
         </div>

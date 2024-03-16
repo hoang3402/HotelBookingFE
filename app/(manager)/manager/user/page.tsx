@@ -6,6 +6,7 @@ import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
 import React, {useEffect, useState} from "react";
+import {User} from "@/app/type";
 
 const columns = [
   {
@@ -40,7 +41,7 @@ const columns = [
 
 const ManagerUserPage = () => {
 
-  const user: any = useAuthUser()
+  const user: User | null = useAuthUser()
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<any[]>([])
 
@@ -50,7 +51,7 @@ const ManagerUserPage = () => {
 
   return (
     <div>
-      {user?.role !== 'admin' ? (
+      {(user && user.role) !== 'admin' ? (
         <div className={'flex justify-center items-center h-screen'}>
           <span className={'text-3xl'}>You don't have permission</span>
         </div>

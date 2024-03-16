@@ -3,12 +3,13 @@
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {useRouter} from "next/navigation";
 import Container from "@/app/components/Container";
+import {User} from "@/app/type";
 
 const ManagerClient = () => {
-  const user: any = useAuthUser()
+  const user: User | null = useAuthUser()
   const route = useRouter()
 
-  if (user.role === 'user') route.push('/')
+  if (user && user.role === 'user') route.push('/')
 
   return (
     <Container>

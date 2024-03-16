@@ -5,8 +5,8 @@ import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
-import React, {useEffect, useMemo, useState} from "react";
-import {HotelData} from "@/app/type";
+import React, {useEffect, useState} from "react";
+import {HotelData, Result, User} from "@/app/type";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Link from "next/link";
@@ -71,7 +71,7 @@ const action = (handleDetail: any, handleDelete: any) => {
 
 const ManagerHotelPage = () => {
 
-  const user: any = useAuthUser()
+  const user: User | null = useAuthUser()
   const token = useAuthHeader()
   const route = useRouter()
   const [reload, setReload] = useState(0)
@@ -109,9 +109,9 @@ const ManagerHotelPage = () => {
       }
     })
       .then((res) => res.json())
-      .then((data: HotelData[]) => {
+      .then((data: Result) => {
         let _data: any = []
-        data.forEach(item => {
+        data.results.forEach((item: HotelData) => {
           _data.push({
             id: item.id,
             name: item.name,
@@ -147,7 +147,7 @@ const ManagerHotelPage = () => {
 
   return (
     <div>
-      {user?.role !== 'admin' ? (
+      {(user && user.role !== 'admin') ? (
         <div className={'flex justify-center items-center h-screen'}>
           <span className={'text-3xl'}>You don't have permission</span>
         </div>
