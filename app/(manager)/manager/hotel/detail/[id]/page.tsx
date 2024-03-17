@@ -8,7 +8,7 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {Input, Textarea} from "@nextui-org/input";
 import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import {useLocation} from "@/app/hooks/useCountries";
-import {Province, User} from "@/app/type";
+import {HotelDataDetails, Province, RoomData, User} from "@/app/type";
 import FileUploader from "@/app/components/FileUploader";
 import Button from "@/app/components/Button";
 import {useRouter} from "next/navigation";
@@ -16,12 +16,61 @@ import {toast} from "react-hot-toast";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {getHotelById} from "@/app/actions/staff/getHotels";
+import MyTable from "@/app/components/MyTable";
+import {SortDescriptor} from "@nextui-org/table";
+import {FormattedPrice} from "@/app/components/Ultility";
+import {Tooltip} from "@nextui-org/tooltip";
+import {EyeIcon} from "@nextui-org/shared-icons";
+import {HiMiniXMark} from "react-icons/hi2";
+
 
 interface IParams {
   id?: string;
 }
 
+
+const columns = [
+  {
+    key: "id",
+    label: "ID",
+  },
+  {
+    key: "name",
+    label: "Name",
+  },
+  {
+    key: "description",
+    label: "Description",
+  },
+  {
+    key: "adults",
+    label: "Adults",
+  },
+  {
+    key: "children",
+    label: "Children",
+  },
+  {
+    key: "price",
+    label: "Price",
+  },
+  {
+    key: "is_available",
+    label: "Is available",
+  },
+  {
+    key: "room_type",
+    label: "Room type",
+  },
+  {
+    key: "action",
+    label: "Action",
+  },
+]
+
+
 const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
+
   const user: User | null = useAuthUser()
   const token = useAuthHeader()
   const route = useRouter()
@@ -38,20 +87,43 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const [address, setAddress] = useState('')
   const [description, setDescription] = useState('')
 
+
+  const [rooms, setRooms] = useState<any>([])
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: 'id',
+    direction: 'descending'
+  })
+
   useEffect(() => {
 
     if (id && id !== '0' && token) {
       setIsLoading(true)
       getHotelById(id, token)
-        .then((res: any) => {
-          setCountry(res.country)
-          setProvince(res.province)
-          setName(res.name)
-          setEmail(res.email)
-          setPhone_number(res.phone_number)
-          setAddress(res.address)
-          setDescription(res.description)
-          setImage(res.image)
+        .then((data: HotelDataDetails) => {
+          setCountry(data.province.country.code)
+          setProvince(data.province.id)
+          setName(data.name)
+          setEmail(data.email)
+          setPhone_number(data.phone_number)
+          setAddress(data.address)
+          setDescription(data.description)
+          setImage(data.image)
+
+          let _temp: any = []
+          data.room_set.forEach((item: RoomData) => {
+            _temp.push({
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              adults: item.adults,
+              children: item.children,
+              price: item.price,
+              is_available: item.is_available,
+              room_type: item.room_type.name,
+              currency: item.hotel.province.country.currency
+            })
+          })
+          setRooms(_temp)
         })
     }
     setIsLoading(false)
@@ -62,6 +134,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const getProvinceByCountry = useCallback((code: string) => {
     return provinces.filter((item: Province) => item.country.code === code)
   }, [provinces])
+
 
   const handleCheckInput = () => {
     if (name === '') {
@@ -86,9 +159,11 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
     }
   }
 
+
   const handleCancel = () => {
     route.back()
   }
+
 
   const handleCreate = () => {
     handleCheckInput()
@@ -122,6 +197,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
       })
   }
 
+
   const handleEdit = () => {
     handleCheckInput()
 
@@ -150,6 +226,60 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
         }
       })
   }
+
+
+  const action = (handleDetail: any, handleDelete: any) => {
+    return (
+      <div className="relative flex items-center gap-2">
+        <Tooltip content="Details">
+        <span
+          className="text-lg text-default-400 cursor-pointer active:opacity-50"
+          onClick={handleDetail}
+        >
+          <EyeIcon/>
+        </span>
+        </Tooltip>
+        <Tooltip content="Delete">
+        <span
+          className="text-lg text-default-400 cursor-pointer active:opacity-50"
+          onClick={handleDelete}
+        >
+          <HiMiniXMark color={"red"}/>
+        </span>
+        </Tooltip>
+      </div>
+    )
+  }
+
+
+  const handleDetails = (id: number) => {
+    route.push(`/manager/hotel/detail/${id}`)
+  }
+
+
+  const handleDelete = (id: number) => {
+
+  }
+
+
+  const renderCell = useCallback((data: any, columnKey: React.Key) => {
+    const cellValue: any = data[columnKey as keyof any];
+    switch (columnKey) {
+      case 'name':
+        return <div className={'line-clamp-1'}>{cellValue}</div>
+      case 'price':
+        return FormattedPrice(cellValue, data.currency)
+      case 'description':
+        return <div className={'line-clamp-1'}>{cellValue}</div>
+      case 'is_available':
+        return cellValue ? 'Yes' : 'No'
+      case 'action':
+        return action(() => handleDetails(data.id), () => handleDelete(data.id));
+      default:
+        return cellValue
+    }
+  }, [])
+
 
   return (
     <div>
@@ -200,22 +330,25 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
                       onValueChange={setAddress}
                     />
 
-                    <div className={'flex justify-between'}>
-                      <div className={'flex flex-col gap-4'}>
+                    {/* create grid 2 side*/}
+
+                    <div className={'grid grid-cols-2 gap-4'}>
+                      <div className={'flex flex-col gap-4 w-full'}>
                         <Autocomplete
                           defaultItems={countries}
                           label="Country"
-                          className="max-w-xs"
                           selectedKey={country}
                           onSelectionChange={setCountry}
                         >
-                          {(country) => <AutocompleteItem key={country.code}>{country.name}</AutocompleteItem>}
+                          {(country) =>
+                            <AutocompleteItem key={country.code}>
+                              {country.name}
+                            </AutocompleteItem>}
                         </Autocomplete>
 
                         <Autocomplete
                           defaultItems={provinces}
                           label="Province"
-                          className="max-w-xs"
                           selectedKey={province}
                           onSelectionChange={setProvince}
                         >
@@ -228,18 +361,16 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
                         <Textarea
                           label="Description"
                           placeholder="Enter your description"
-                          className="max-w-xs"
                           value={description}
                           onValueChange={setDescription}
                           disableAutosize
                           classNames={{
-                            base: "max-w-xs w-full",
-                            input: "resize-y min-h-[40px]",
+                            input: "resize-y min-h-[160px]",
                           }}
                         />
                       </div>
 
-                      <div className={'w-[600px] h-[410px]'}>
+                      <div className={'h-[410px]'}>
                         <span className="">Image</span>
                         <FileUploader
                           url={`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_API_KEY_IMAGE_HOST}`}
@@ -254,6 +385,17 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
                           setImage={setImage}
                         />
                       </div>
+                    </div>
+
+                    <div className={'mt-4'}>
+                      <MyTable
+                        title={'Rooms'}
+                        rows={rooms}
+                        columns={columns}
+                        sortDescriptor={sortDescriptor}
+                        setSortDescriptor={setSortDescriptor}
+                        renderCell={renderCell}
+                      />
                     </div>
 
                     <div className={'flex gap-4 mt-2 mb-4'}>
@@ -275,5 +417,6 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
     </div>
   )
 }
+
 
 export default ManagerDetailHotelPage

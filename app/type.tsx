@@ -66,7 +66,7 @@ export interface HotelDataDetails {
   features: {
     description: string
   }[]
-  room_set: HotelData[]
+  room_set: RoomData[]
 }
 
 
@@ -109,6 +109,8 @@ export interface RoomData {
   id: number
   name: string
   description: string
+  adults: number
+  children: number
   price: string
   image: string
   is_available: boolean

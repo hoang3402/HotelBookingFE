@@ -27,16 +27,7 @@ export async function getHotelById(id: string, token: string) {
   })
     .then(res => res.json())
     .then(data => {
-      return {
-        province: data.province.id,
-        country: data.province.country.code,
-        name: data.name,
-        email: data.email,
-        phone_number: data.phone_number,
-        address: data.address,
-        description: data.description,
-        image: data.image
-      }
+      return data
     })
     .catch(err => {
       console.log(err)

@@ -1,5 +1,6 @@
 "use client";
 
+
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
 import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
@@ -19,6 +20,7 @@ import {toast} from "react-hot-toast";
 import {SortDescriptor} from "@nextui-org/table";
 import {getHotels} from "@/app/actions/staff/getHotels";
 import {Pagination} from "@nextui-org/pagination";
+
 
 const columns = [
   {
@@ -46,6 +48,7 @@ const columns = [
     label: "Action",
   },
 ]
+
 
 const action = (handleDetail: any, handleDelete: any) => {
   return (
@@ -86,6 +89,7 @@ const ManagerHotelPage = () => {
     direction: 'descending'
   })
 
+
   const handleDelete = (id: number) => {
     fetch(`${domain}api/hotel/${id}/delete/`, {
       method: 'DELETE',
@@ -103,6 +107,7 @@ const ManagerHotelPage = () => {
       })
       .finally(() => setReload(reload + 1))
   }
+
 
   useEffect(() => {
     if (token) {
@@ -125,9 +130,11 @@ const ManagerHotelPage = () => {
     }
   }, [reload, page])
 
+
   const handleDetails = (id: number) => {
     route.push(`/manager/hotel/detail/${id}`)
   }
+
 
   const renderCell = React.useCallback((data: HotelData, columnKey: React.Key) => {
     const cellValue: any = data[columnKey as keyof HotelData];
