@@ -2,7 +2,9 @@ import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@
 import React, {useMemo} from "react";
 
 
-const MyTable = ({title, columns, rows, renderCell, setSortDescriptor, sortDescriptor}: any) => {
+const MyTable = (
+  {title, columns, rows, renderCell, setSortDescriptor, sortDescriptor, bottomContent}: any
+) => {
 
   const sortedItems = useMemo(() => {
     return [...rows].sort((a: any, b: any) => {
@@ -20,6 +22,7 @@ const MyTable = ({title, columns, rows, renderCell, setSortDescriptor, sortDescr
       aria-label={title}
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
+      bottomContent={bottomContent}
     >
       <TableHeader columns={columns}>
         {(column: any) =>

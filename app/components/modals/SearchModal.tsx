@@ -109,7 +109,7 @@ const SearchModal = () => {
       city,
       searchModal,
       router,
-      onNext
+      onNext,
     ]);
 
   const actionLabel = useMemo(() => {

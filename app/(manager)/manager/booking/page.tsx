@@ -6,9 +6,8 @@ import React, {useEffect, useState} from "react";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loader from "@/app/components/Loader";
-import {FormattedPrice} from "@/app/components/Ultility";
 import NextAuth from "@auth-kit/next";
-import {BookingData, BookingDataDetails} from "@/app/type";
+import {BookingData, BookingDataDetails, Result} from "@/app/type";
 import {toast} from "react-hot-toast";
 import Link from "next/link";
 import {Tooltip} from "@nextui-org/tooltip";
@@ -17,6 +16,9 @@ import {MdOutlineDone} from "react-icons/md";
 import {HiMiniXMark} from "react-icons/hi2";
 import {useRouter} from "next/navigation";
 import {SortDescriptor} from "@nextui-org/table";
+import {getBookings} from "@/app/actions/staff/getBookings";
+import {Pagination} from "@nextui-org/pagination";
+import {FormattedPrice} from "@/app/components/Ultility";
 
 const columns = [
   {
@@ -91,6 +93,8 @@ const StaffBookingPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [reload, setReload] = useState(0)
   const [data, setData] = useState<any[]>([])
+  const [page, setPage] = React.useState(1);
+  const [pages, setPages] = React.useState(1);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'id',
     direction: 'descending'
@@ -100,6 +104,7 @@ const StaffBookingPage = () => {
   const handleDetail = (id: number) => {
     route.push(`/manager/booking/${id}`)
   }
+
 
   const handleConfirmed = (id: number) => {
     fetch(`${domain}api/staff/booking/${id}/edit/`, {
@@ -125,6 +130,7 @@ const StaffBookingPage = () => {
       .finally(() => setReload(reload + 1))
   }
 
+
   const handleCancel = (id: number) => {
     fetch(`${domain}api/staff/booking/${id}/edit/`, {
       method: "PATCH",
@@ -149,18 +155,12 @@ const StaffBookingPage = () => {
       .finally(() => setReload(reload + 1))
   }
 
+
   useEffect(() => {
-    fetch(`${domain}api/staff/booking/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `${token}`
-      },
-      cache: 'reload'
-    }).then(res => res.json())
-      .then(res => {
+    if (token) {
+      getBookings(token).then((res: any) => {
         let _data: BookingData[] = []
-        res.forEach((item: BookingDataDetails) => {
+        res.results.forEach((item: BookingDataDetails) => {
             _data.push({
               id: item.id,
               hotel: `${item.hotel.id} - ${item.hotel.name}`,
@@ -173,10 +173,12 @@ const StaffBookingPage = () => {
           }
         )
         setData(_data)
-        setIsLoading(false);
+        setPages(Math.ceil(res.count / res.results.length))
+        setIsLoading(false)
       })
-      .catch(error => console.error("Error fetching data:", error));
+    }
   }, [reload])
+
 
   const renderCell = React.useCallback((data: BookingData, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof BookingData];
@@ -209,6 +211,19 @@ const StaffBookingPage = () => {
                 renderCell={renderCell}
                 sortDescriptor={sortDescriptor}
                 setSortDescriptor={setSortDescriptor}
+                bottomContent={
+                  <div className="flex w-full justify-center">
+                    <Pagination
+                      isCompact
+                      showControls
+                      showShadow
+                      color="secondary"
+                      page={page}
+                      total={pages}
+                      onChange={(page) => setPage(page)}
+                    />
+                  </div>
+                }
               />
             )}
           </div>

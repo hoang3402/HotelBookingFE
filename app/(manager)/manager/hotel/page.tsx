@@ -6,7 +6,7 @@ import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
 import React, {useEffect, useState} from "react";
-import {HotelData, Result, User} from "@/app/type";
+import {HotelData, User} from "@/app/type";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Link from "next/link";
@@ -17,6 +17,8 @@ import Button from "@/app/components/Button";
 import {useRouter} from "next/navigation";
 import {toast} from "react-hot-toast";
 import {SortDescriptor} from "@nextui-org/table";
+import {getHotels} from "@/app/actions/staff/getHotels";
+import {Pagination} from "@nextui-org/pagination";
 
 const columns = [
   {
@@ -76,6 +78,8 @@ const ManagerHotelPage = () => {
   const route = useRouter()
   const [reload, setReload] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [page, setPage] = React.useState(1);
+  const [pages, setPages] = React.useState(1);
   const [data, setData] = useState<any[]>([])
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'id',
@@ -101,18 +105,11 @@ const ManagerHotelPage = () => {
   }
 
   useEffect(() => {
-    fetch(`${domain}api/hotel/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `${token}`
-      }
-    })
-      .then((res) => res.json())
-      .then((data: Result) => {
-        let _data: any = []
-        data.results.forEach((item: HotelData) => {
-          _data.push({
+    if (token) {
+      getHotels(token, page).then(res => {
+        let _temp: any = []
+        res.results.forEach((item: HotelData) => {
+          _temp.push({
             id: item.id,
             name: item.name,
             phone_number: item.phone_number,
@@ -121,10 +118,12 @@ const ManagerHotelPage = () => {
             action: item.id
           })
         })
-        setData(_data)
+        setData(_temp)
+        setPages(Math.ceil(res.count / res.results.length))
         setIsLoading(false)
       })
-  }, [reload])
+    }
+  }, [reload, page])
 
   const handleDetails = (id: number) => {
     route.push(`/manager/hotel/detail/${id}`)
@@ -168,6 +167,19 @@ const ManagerHotelPage = () => {
                     renderCell={renderCell}
                     sortDescriptor={sortDescriptor}
                     setSortDescriptor={setSortDescriptor}
+                    bottomContent={
+                      <div className="flex w-full justify-center">
+                        <Pagination
+                          isCompact
+                          showControls
+                          showShadow
+                          color="secondary"
+                          page={page}
+                          total={pages}
+                          onChange={(page) => setPage(page)}
+                        />
+                      </div>
+                    }
                   />
                 )}
               </div>

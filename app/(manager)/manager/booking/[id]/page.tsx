@@ -4,9 +4,7 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
 import React, {useEffect, useState} from "react";
-import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import {toast} from "react-hot-toast";
 import Loader from "@/app/components/Loader";
 import {FormattedDate, FormattedPrice} from "@/app/components/Ultility";
 import Button from "@/app/components/Button";
@@ -14,6 +12,7 @@ import {DateRange} from "react-date-range";
 import Container from "@/app/components/Container";
 import {useRouter} from "next/navigation";
 import {BookingDataDetails} from "@/app/type";
+import {getBookingById} from "@/app/actions/staff/getBookings";
 
 interface IParams {
   id?: string;
@@ -41,30 +40,18 @@ const StaffBookingDetailPage = ({params}: { params: IParams }) => {
   }
 
   useEffect(() => {
-
-    fetch(`${domain}api/staff/booking/${id}/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `${token}`
-      }
-    }).then(res => res.json())
-      .then(data => {
-        setData(data)
+    if (id && token) {
+      setIsLoading(true)
+      getBookingById(id, token).then((res) => {
+        setData(res)
         setSelectedRange({
-          startDate: new Date(data.check_in_date),
-          endDate: new Date(data.check_out_date),
+          startDate: new Date(res.check_in_date),
+          endDate: new Date(res.check_out_date),
           key: 'selection'
         })
-      })
-      .catch(err => {
-        console.log(err)
-        toast.error(err)
-      })
-      .finally(() => {
         setIsLoading(false)
       })
-
+    }
   }, [])
 
   return (

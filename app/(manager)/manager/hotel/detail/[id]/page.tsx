@@ -15,6 +15,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "react-hot-toast";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import {getHotelById} from "@/app/actions/staff/getHotels";
 
 interface IParams {
   id?: string;
@@ -39,28 +40,18 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
 
   useEffect(() => {
 
-    if (id !== '0') {
-      fetch(`${domain}api/hotel/${id}/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${token}`
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          setProvince(data.province.id)
-          setCountry(data.province.country.code)
-          setName(data.name)
-          setEmail(data.email)
-          setPhone_number(data.phone_number)
-          setAddress(data.address)
-          setDescription(data.description)
-          setImage(data.image)
-        })
-        .catch(err => {
-          console.log(err)
-          toast.error(err.detail)
+    if (id && id !== '0' && token) {
+      setIsLoading(true)
+      getHotelById(id, token)
+        .then((res: any) => {
+          setCountry(res.country)
+          setProvince(res.province)
+          setName(res.name)
+          setEmail(res.email)
+          setPhone_number(res.phone_number)
+          setAddress(res.address)
+          setDescription(res.description)
+          setImage(res.image)
         })
     }
     setIsLoading(false)
