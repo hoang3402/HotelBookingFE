@@ -16,6 +16,7 @@ import Heading from "../Heading";
 import Button from "../Button";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import {jwtDecode} from "jwt-decode";
+import {SaveToken} from "@/app/components/Ultility";
 
 const LoginModal = () => {
   const loginModal = useLoginModal();
@@ -56,29 +57,15 @@ const LoginModal = () => {
         // decode
         const payload: any = jwtDecode(data.access)
 
-        if (signIn({
-          auth: {
-            token: data.access,
-            type: 'Bearer'
-          },
-          refresh: data.refresh,
-          userState: {
-            uid: data.user.id,
-            email: data.user.email,
-            first_name: data.user.first_name,
-            last_name: data.user.last_name,
-            phone: data.user.phone,
-            role: payload.role
-          }
-        })) {
+        if (SaveToken(signIn, data, payload)) {
           // Redirect or do-something
+          toast.success('Successfully logged in');
         } else {
           //Throw error
           toast.error('Something went wrong');
           loginModal.onClose();
         }
 
-        toast.success('Successfully logged in');
         loginModal.onClose();
       })).catch(error => {
         // toast.error(error);

@@ -253,7 +253,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
 
 
   const handleDetails = (id: number) => {
-    route.push(`/manager/hotel/detail/${id}`)
+    route.push(`/manager/room/${id}`)
   }
 
 
