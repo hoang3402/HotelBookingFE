@@ -11,8 +11,10 @@ import {toast} from "react-hot-toast";
 import ImageUpload from "@/app/components/ImageUpload";
 import {Input, Textarea} from "@nextui-org/input";
 import {Select, SelectItem} from "@nextui-org/react";
-import {FormattedPrice} from "@/app/components/Ultility";
 import {Tooltip} from "@nextui-org/tooltip";
+import {useRoomType} from "@/app/hooks/useRoomType";
+import Button from "@/app/components/Button";
+import {useRouter} from "next/navigation";
 
 
 const booleanSelect = [
@@ -30,7 +32,9 @@ const booleanSelect = [
 const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
 
   const user: any = useAuthUser()
+  const route = useRouter()
   const [isLoading, setIsLoading] = useState(true)
+  const {roomTypes} = useRoomType()
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -42,14 +46,22 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
   const [image, setImage] = useState('')
 
 
-  const onSubmit = () => {
-
+  const handleUpdate = () => {
     fetch(`${domain}api/room/${params.id}/edit/`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({
+        name,
+        description,
+        adults,
+        children,
+        price,
+        is_available,
+        room_type,
+        image
+      })
     }).then(res => res.json())
       .then(data => {
         if (data.detail) {
@@ -61,6 +73,8 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
   }
 
   useEffect(() => {
+
+    console.log(roomTypes)
 
     setIsLoading(true)
 
@@ -78,13 +92,17 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
         setPrice(data.price)
         setIsAvailable(data.is_available === 'true' ? '1' : '0')
         setImage(data.image)
-        setRoomType(data.room_type.id)
-        setImage(data.image)
+        setRoomType(`${data.room_type.id}`)
       })
 
     setIsLoading(false)
 
   }, [])
+
+
+  const handleCancel = () => {
+    route.back()
+  }
 
 
   return (
@@ -119,7 +137,10 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
                       onValueChange={setDescription}
                     />
                     <Input
-                      label={<Tooltip color={'danger'} content={'The price will be set according to the local currency.'} ><div>Price</div></Tooltip >}
+                      label={<Tooltip color={'danger'}
+                                      content={'The price will be set according to the local currency.'}>
+                        <div>Price</div>
+                      </Tooltip>}
                       required={true}
                       type={"number"}
                       isClearable
@@ -152,17 +173,24 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
                         <SelectItem key={_select.value}>{_select.label}</SelectItem>
                       ))}
                     </Select>
-                    <Input
-                      label={'Room type'}
-                      required={true}
-                      type={"text"}
-                      isClearable
-                      value={room_type}
-                      onValueChange={setRoomType}
-                    />
+                    <Select
+                      label="Room type"
+                      placeholder=""
+                      selectedKeys={room_type}
+                      onSelectionChange={(value) => setRoomType(value as string)}
+                    >
+                      {roomTypes.map((type: any) => (
+                        <SelectItem key={type.id}>{type.name}</SelectItem>
+                      ))}
+                    </Select>
 
                     <div className={'flex justify-center'}>
                       <ImageUpload image={image} setImage={setImage}/>
+                    </div>
+
+                    <div className={'flex gap-4 mt-2'}>
+                      <Button label={'Update'} onClick={handleUpdate}/>
+                      <Button label={'Cancel'} onClick={handleCancel}/>
                     </div>
                   </div>
                 )}
