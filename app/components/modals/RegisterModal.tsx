@@ -58,7 +58,7 @@ const RegisterModal = () => {
       }),
     }).then(res => res.json()
       .then(data => {
-        if (SaveToken(signIn, data, jwtDecode(data.access))) {
+        if (SaveToken(signIn, data)) {
           // Redirect or do-something
           toast.success('Register successfully');
         } else {

@@ -15,6 +15,7 @@ import {Tooltip} from "@nextui-org/tooltip";
 import {useRoomType} from "@/app/hooks/useRoomType";
 import Button from "@/app/components/Button";
 import {useRouter} from "next/navigation";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 
 const booleanSelect = [
@@ -35,6 +36,7 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
   const route = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const {roomTypes} = useRoomType()
+  const token = useAuthHeader()
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -78,6 +80,11 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
 
     setIsLoading(true)
 
+    if (params.id === '0') {
+      setIsLoading(false)
+      return
+    }
+
     fetch(`${domain}api/room/${params.id}/`, {
       method: 'GET',
       headers: {
@@ -104,6 +111,32 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
     route.back()
   }
 
+
+  function handleCreate() {
+    fetch(`${domain}api/room/create/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        adults,
+        children,
+        price,
+        is_available,
+        room_type,
+        image
+      })
+    }).then(res => res.json())
+      .then(data => {
+        if (data.detail) {
+          toast.error(data.detail)
+          return
+        }
+      })
+  }
 
   return (
     <div>
@@ -189,7 +222,11 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
                     </div>
 
                     <div className={'flex gap-4 mt-2'}>
-                      <Button label={'Update'} onClick={handleUpdate}/>
+                      {params.id === '0' ? (
+                        <Button label={'Create'} onClick={handleCreate}/>
+                      ) : (
+                        <Button label={'Update'} onClick={handleUpdate}/>
+                      )}
                       <Button label={'Cancel'} onClick={handleCancel}/>
                     </div>
                   </div>

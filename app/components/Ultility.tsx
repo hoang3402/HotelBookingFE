@@ -13,7 +13,7 @@ export function FormattedDate(date: any) {
   return new Date(date).toDateString()
 }
 
-export function SaveToken(signIn: any, data: any, payload: any) {
+export function SaveToken(signIn: any, data: any) {
   return signIn({
     auth: {
       token: data.access,
@@ -25,8 +25,8 @@ export function SaveToken(signIn: any, data: any, payload: any) {
       email: data.user.email,
       first_name: data.user.first_name,
       last_name: data.user.last_name,
-      phone: data.user.phone,
-      role: payload.role
+      number_phone: data.user.number_phone,
+      role: data.user.role
     }
   })
 }

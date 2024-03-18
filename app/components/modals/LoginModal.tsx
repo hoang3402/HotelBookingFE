@@ -54,10 +54,7 @@ const LoginModal = () => {
           return;
         }
 
-        // decode
-        const payload: any = jwtDecode(data.access)
-
-        if (SaveToken(signIn, data, payload)) {
+        if (SaveToken(signIn, data)) {
           // Redirect or do-something
           toast.success('Successfully logged in');
         } else {

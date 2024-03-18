@@ -42,7 +42,7 @@ const Home = async ({searchParams}: HomeProps) => {
             ))}
           </div>
 
-          <HomePagination page={searchParams.page ?? 1} pages={listings.count}/>
+          <HomePagination page={searchParams.page ?? 1} pages={Math.ceil(listings.count / listings.results.length)}/>
         </div>
       </Container>
     </ClientOnly>
