@@ -15,6 +15,10 @@ import {Tooltip} from "@nextui-org/tooltip";
 import {EyeIcon} from "@nextui-org/shared-icons";
 import {HiMiniXMark} from "react-icons/hi2";
 import {useRouter} from "next/navigation";
+import {domain} from "@/app/actions/getRoomById";
+import {toast} from "react-hot-toast";
+import {Pagination} from "@nextui-org/pagination";
+import {Input} from "@nextui-org/input";
 
 const columns = [
   {
@@ -78,6 +82,9 @@ const ManagerUserPage = () => {
   const route = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<any[]>([])
+  const [page, setPage] = React.useState(1);
+  const [pages, setPages] = React.useState(1);
+  const [filterValue, setFilterValue] = React.useState("");
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'id',
     direction: 'descending'
@@ -86,8 +93,9 @@ const ManagerUserPage = () => {
 
   useEffect(() => {
     if (token) {
-      getUsers(token).then((res: Result) => {
+      getUsers(token, page, 10).then((res: Result) => {
         setData(res.results)
+        setPages(Math.ceil(res.count / res.results.length))
       })
     }
     setIsLoading(false)
@@ -99,7 +107,14 @@ const ManagerUserPage = () => {
   }
 
   const handleDelete = (id: number) => {
-
+    fetch(`${domain}api/user/${id}/delete/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      }
+    })
+      .then(res => res.ok ? toast.success('Delete user success!') : toast.error('Delete user failed!'))
   }
 
 
@@ -118,6 +133,27 @@ const ManagerUserPage = () => {
   }, [])
 
 
+  const onSearchChange = React.useCallback((value: any) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const filteredItems = React.useMemo(() => {
+    if (filterValue) {
+      return data.filter((item: User) => {
+        return item.first_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+          item.last_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+          item.email.toLowerCase().includes(filterValue.toLowerCase())
+      });
+    }
+    return data;
+  }, [filterValue])
+
+
   return (
     <div>
       {(user && user.role) !== 'admin' ? (
@@ -133,14 +169,30 @@ const ManagerUserPage = () => {
                 {isLoading ? (
                   <Loader/>
                 ) : (
-                  <MyTable
-                    title={'Users'}
-                    columns={columns}
-                    rows={data}
-                    sortDescriptor={sortDescriptor}
-                    setSortDescriptor={setSortDescriptor}
-                    renderCell={renderCell}
-                  />
+                  <div className={'flex flex-col gap-5'}>
+                    <Input value={filterValue} onValueChange={setFilterValue} placeholder="Search"/>
+                    <MyTable
+                      title={'Users'}
+                      columns={columns}
+                      rows={filteredItems}
+                      renderCell={renderCell}
+                      sortDescriptor={sortDescriptor}
+                      setSortDescriptor={setSortDescriptor}
+                      bottomContent={
+                        <div className="flex w-full justify-center">
+                          <Pagination
+                            isCompact
+                            showControls
+                            showShadow
+                            color="secondary"
+                            page={page}
+                            total={pages}
+                            onChange={(page) => setPage(page)}
+                          />
+                        </div>
+                      }
+                    />
+                  </div>
                 )}
               </div>
             </div>

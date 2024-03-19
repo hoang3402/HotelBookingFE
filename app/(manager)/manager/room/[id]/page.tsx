@@ -46,13 +46,15 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
   const [is_available, setIsAvailable] = useState('0')
   const [room_type, setRoomType] = useState('')
   const [image, setImage] = useState('')
+  const [hotel, setHotel] = useState('')
 
 
   const handleUpdate = () => {
     fetch(`${domain}api/room/${params.id}/edit/`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
       },
       body: JSON.stringify({
         name,
@@ -62,7 +64,8 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
         price,
         is_available,
         room_type,
-        image
+        image,
+        hotel
       })
     }).then(res => res.json())
       .then(data => {
@@ -71,6 +74,7 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
           return
         }
         toast.success('Update room success!')
+        route.back()
       })
   }
 
@@ -100,6 +104,7 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
         setIsAvailable(data.is_available === 'true' ? '1' : '0')
         setImage(data.image)
         setRoomType(`${data.room_type.id}`)
+        setHotel(data.hotel.id)
       })
 
     setIsLoading(false)
@@ -127,7 +132,8 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
         price,
         is_available,
         room_type,
-        image
+        image,
+        hotel
       })
     }).then(res => res.json())
       .then(data => {
@@ -147,21 +153,31 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
       ) : (
         <NextAuth fallbackPath={'/'}>
           <Container>
-            <div className={'flex flex-col gap-4 mt-4'}>
-              <h1 className={'text-3xl font-bold'}>Rooms of </h1>
+            <div className={'flex flex-col gap-4 mt-4 mb-4'}>
+              <h1 className={'text-3xl font-bold'}>Rooms</h1>
               <div>
                 {isLoading ? (
                   <Loader/>
                 ) : (
                   <div className={'flex flex-col gap-4'}>
-                    <Input
-                      label={'Name room'}
-                      required={true}
-                      type={"text"}
-                      isClearable
-                      value={name}
-                      onValueChange={setName}
-                    />
+                    <div className={'flex gap-4'}>
+                      <Input
+                        label={'Name room'}
+                        required={true}
+                        type={"text"}
+                        isClearable
+                        value={name}
+                        onValueChange={setName}
+                      />
+                      <Input
+                        label={'Hotel'}
+                        required={true}
+                        type={"number"}
+                        isClearable
+                        value={hotel}
+                        onValueChange={setHotel}
+                      />
+                    </div>
                     <Textarea
                       label={'Description'}
                       required={true}
@@ -180,42 +196,44 @@ const ManagerRoomsPage = ({params}: { params: { id: string } }) => {
                       value={price}
                       onValueChange={setPrice}
                     />
-                    <Input
-                      label={'Adults'}
-                      required={true}
-                      type={"number"}
-                      isClearable
-                      value={adults}
-                      onValueChange={setAdults}
-                    />
-                    <Input
-                      label={'Children'}
-                      required={true}
-                      type={"number"}
-                      isClearable
-                      value={children}
-                      onValueChange={setChildren}
-                    />
-                    <Select
-                      label="Is available?"
-                      placeholder=""
-                      selectedKeys={is_available}
-                      onSelectionChange={(value) => setIsAvailable(value as string)}
-                    >
-                      {booleanSelect.map((_select: any) => (
-                        <SelectItem key={_select.value}>{_select.label}</SelectItem>
-                      ))}
-                    </Select>
-                    <Select
-                      label="Room type"
-                      placeholder=""
-                      selectedKeys={room_type}
-                      onSelectionChange={(value) => setRoomType(value as string)}
-                    >
-                      {roomTypes.map((type: any) => (
-                        <SelectItem key={type.id}>{type.name}</SelectItem>
-                      ))}
-                    </Select>
+                    <div className={'flex gap-4'}>
+                      <Input
+                        label={'Adults'}
+                        required={true}
+                        type={"number"}
+                        isClearable
+                        value={adults}
+                        onValueChange={setAdults}
+                      />
+                      <Input
+                        label={'Children'}
+                        required={true}
+                        type={"number"}
+                        isClearable
+                        value={children}
+                        onValueChange={setChildren}
+                      />
+                      <Select
+                        label="Is available?"
+                        placeholder=""
+                        selectedKeys={is_available}
+                        onSelectionChange={(value) => setIsAvailable(value as string)}
+                      >
+                        {booleanSelect.map((_select: any) => (
+                          <SelectItem key={_select.value}>{_select.label}</SelectItem>
+                        ))}
+                      </Select>
+                      <Select
+                        label="Room type"
+                        placeholder=""
+                        selectedKeys={room_type}
+                        onSelectionChange={(value) => setRoomType(value as string)}
+                      >
+                        {roomTypes.map((type: any) => (
+                          <SelectItem key={type.id}>{type.name}</SelectItem>
+                        ))}
+                      </Select>
+                    </div>
 
                     <div className={'flex justify-center'}>
                       <ImageUpload image={image} setImage={setImage}/>

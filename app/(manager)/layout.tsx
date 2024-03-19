@@ -11,6 +11,7 @@ import {FaHome, FaHotel, FaUserAlt} from "react-icons/fa";
 import {IoTicket} from "react-icons/io5";
 import LocationsProvider from "@/app/providers/LocationsProvider";
 import RoomTypeProvider from "@/app/providers/RoomTypeProvider";
+import {MdOutlineBed} from "react-icons/md";
 
 export const metadata = {
   title: 'Dashboard Hotel booking',
@@ -38,9 +39,10 @@ export default function RootLayout({
       <div className={'flex'}>
         <SideBar>
           <SidebarItem icon={<FaHome/>} text={'Home'} path={'/manager'}/>
-          <SidebarItem icon={<FaHotel/>} text={'Hotel'} path={'/manager/hotel'}/>
-          <SidebarItem icon={<IoTicket/>} text={'Booking'} path={'/manager/booking'}/>
-          <SidebarItem icon={<FaUserAlt/>} text={'User'} path={'/manager/user'}/>
+          <SidebarItem icon={<FaHotel/>} text={'Hotels'} path={'/manager/hotel'}/>
+          <SidebarItem icon={<MdOutlineBed />} text={'Rooms'} path={'/manager/room'}/>
+          <SidebarItem icon={<IoTicket/>} text={'Bookings'} path={'/manager/booking'}/>
+          <SidebarItem icon={<FaUserAlt/>} text={'Users'} path={'/manager/user'}/>
         </SideBar>
         <div className={'flex-1'}>
           {children}

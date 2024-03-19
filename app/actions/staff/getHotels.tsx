@@ -3,7 +3,6 @@ import {HotelData, Result} from "@/app/type";
 import {toast} from "react-hot-toast";
 
 export async function getHotels(token: string, page: number) {
-
   return fetch(`${domain}api/hotel/?page=${page}`, {
     method: "GET",
     headers: {
