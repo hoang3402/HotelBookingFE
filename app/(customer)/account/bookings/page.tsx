@@ -18,7 +18,6 @@ export default function Page() {
   const [bookings, setBookings] = useState([])
   const route = useRouter()
   const [activeTab, setActiveTab] = useState('upcoming');
-  const handleTabChange = (newTabKey: any) => setActiveTab(newTabKey);
   const filteredBookings = (status: any) =>
     bookings.filter((booking: any) => booking.status === status);
 
@@ -44,7 +43,7 @@ export default function Page() {
             <h1>You have {bookings.length} booking</h1>
             <br/>
             <div className={'w-full flex flex-col justify-center items-center'}>
-              <Tabs onSelect={handleTabChange}>
+              <Tabs onSelect={(key: any) => setActiveTab(key)}>
                 <Tab key="upcoming" title="Upcoming">
                   <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
                     {filteredBookings('Pending').map((booking: any) => (
