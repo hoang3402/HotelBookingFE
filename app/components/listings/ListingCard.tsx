@@ -64,12 +64,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
             "
             src={data.image}
             alt="Listing"
+            sizes={'600'}
           />
           <div className="
-            absolute
-            top-3
-            right-3
-          ">
+              absolute
+              top-3
+              right-3
+            "
+          >
             <HeartButton
               listingId={data.id}
               currentUser={currentUser}

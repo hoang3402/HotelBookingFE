@@ -15,7 +15,7 @@ const ListingCardRoom: React.FC<listingCardRoomProps> = ({room, currency}) => {
   return (
     <div className="w-full rounded-2xl cursor-pointer border-[1px] p-3">
       <h2 className="text-2xl font-bold">{room?.name}</h2>
-      <div className="flex">
+      <div className="flex mb-4">
         <div className="h-[126px] w-[208px]">
           <Image
             src={room?.image}

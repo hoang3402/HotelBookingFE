@@ -52,10 +52,13 @@ const SearchModal = () => {
         return onNext();
       }
 
-      let currentQuery = {};
+      let currentQuery: any = {};
 
       if (params) {
         currentQuery = qs.parse(params.toString())
+        if (Object.keys(currentQuery).length < 2) {
+          currentQuery.page = 1
+        }
       }
 
       const updatedQuery: any = {

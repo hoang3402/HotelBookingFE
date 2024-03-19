@@ -28,7 +28,7 @@ export default async function getHotels(
       page
     } = params;
 
-    return fetch(`${domain}api/search/`, {
+    return fetch(`${domain}api/search/?page=${page ?? '1'}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

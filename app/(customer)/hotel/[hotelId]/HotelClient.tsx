@@ -43,17 +43,19 @@ const HotelClient = ({listing}: any) => {
               </div>
             </Card>
 
-            <Card className={'p-4'}>
-              <h2>Features</h2>
-              <div className={'grid'}>
-                {listing?.features?.map((feature: any, index: number) => (
-                  <div key={index} className={'flex items-center gap-2'}>
-                    <MdDone/>
-                    <p>{feature?.description}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            {listing?.features?.length > 0 && (
+              <Card className={'p-4'}>
+                <h2>Features</h2>
+                <div className={'grid'}>
+                  {listing.features.map((feature: any, index: number) => (
+                    <div key={index} className={'flex items-center gap-2'}>
+                      <MdDone/>
+                      <p>{feature?.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
 
             <ListingRoom
               rooms={listing?.room_set} currency={listing?.province?.country?.currency}
