@@ -1,9 +1,9 @@
 'use client';
 
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Container from "@/app/components/Container";
-import {User} from "@/app/type";
+import { User } from "@/app/type";
 
 const ManagerClient = () => {
   const user: User | null = useAuthUser()

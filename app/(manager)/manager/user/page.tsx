@@ -5,20 +5,20 @@ import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
 import MyTable from "@/app/components/MyTable";
 import NextAuth from "@auth-kit/next";
-import React, {useCallback, useEffect, useState} from "react";
-import {Result, User} from "@/app/type";
+import React, { useCallback, useEffect, useState } from "react";
+import { Result, User } from "@/app/type";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import getUsers from "@/app/actions/getUsers";
-import {SortDescriptor} from "@nextui-org/table";
+import { SortDescriptor } from "@nextui-org/table";
 import Link from "next/link";
-import {Tooltip} from "@nextui-org/tooltip";
-import {EyeIcon} from "@nextui-org/shared-icons";
-import {HiMiniXMark} from "react-icons/hi2";
-import {useRouter} from "next/navigation";
-import {domain} from "@/app/actions/getRoomById";
-import {toast} from "react-hot-toast";
-import {Pagination} from "@nextui-org/pagination";
-import {Input} from "@nextui-org/input";
+import { Tooltip } from "@nextui-org/tooltip";
+import { EyeIcon } from "@nextui-org/shared-icons";
+import { HiMiniXMark } from "react-icons/hi2";
+import { useRouter } from "next/navigation";
+import { domain } from "@/app/actions/getRoomById";
+import { toast } from "react-hot-toast";
+import { Pagination } from "@nextui-org/pagination";
+import { Input } from "@nextui-org/input";
 
 const columns = [
   {
@@ -59,7 +59,7 @@ const action = (handleDetail: any, handleDelete: any) => {
           className="text-lg text-default-400 cursor-pointer active:opacity-50"
           onClick={handleDetail}
         >
-          <EyeIcon/>
+          <EyeIcon />
         </span>
       </Tooltip>
       <Tooltip content="Delete">
@@ -67,7 +67,7 @@ const action = (handleDetail: any, handleDelete: any) => {
           className="text-lg text-default-400 cursor-pointer active:opacity-50"
           onClick={handleDelete}
         >
-          <HiMiniXMark color={"red"}/>
+          <HiMiniXMark color={"red"} />
         </span>
       </Tooltip>
     </div>
@@ -142,7 +142,7 @@ const ManagerUserPage = () => {
       });
     }
     return data;
-  }, [filterValue])
+  }, [filterValue, data])
 
 
   return (
@@ -158,10 +158,10 @@ const ManagerUserPage = () => {
               <h1 className={'text-3xl font-bold'}>Users</h1>
               <div>
                 {isLoading ? (
-                  <Loader/>
+                  <Loader />
                 ) : (
                   <div className={'flex flex-col gap-5'}>
-                    <Input value={filterValue} onValueChange={setFilterValue} placeholder="Search"/>
+                    <Input value={filterValue} onValueChange={setFilterValue} placeholder="Search" />
                     <MyTable
                       title={'Users'}
                       columns={columns}
