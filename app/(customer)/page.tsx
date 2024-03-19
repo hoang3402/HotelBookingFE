@@ -9,6 +9,7 @@ import {HotelData, Result} from "@/app/type";
 import {Pagination} from "@nextui-org/pagination";
 import qs from "query-string";
 import Loader from "@/app/components/Loader";
+import {useRouter} from "next/navigation";
 
 interface HomeProps {
   searchParams: IListingsParams
@@ -17,13 +18,13 @@ interface HomeProps {
 const Home = ({searchParams}: HomeProps) => {
   const [listings, setListings] = React.useState<Result | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const route = useRouter();
   const [page, setPage] = React.useState(1);
   const [pages, setPages] = React.useState(1);
 
   useEffect(() => {
     setIsLoading(true)
     getHotels(searchParams).then((data) => {
-      console.log(data)
       setListings(data)
       setPages(Math.ceil(data.count / 12))
       setIsLoading(false)
@@ -45,7 +46,7 @@ const Home = ({searchParams}: HomeProps) => {
       query: updatedQuery,
     }, {skipNull: true});
 
-    window.history.replaceState(null, '', url);
+    route.push(url)
   }
 
   return (
