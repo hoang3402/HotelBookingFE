@@ -6,6 +6,7 @@ import {FiMoreVertical} from "react-icons/fi";
 import {useSideBar} from "@/app/hooks/useSideBar";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {useRouter} from "next/navigation";
+import Image from "next/image";
 
 export default function SideBar({children}: any) {
 
@@ -23,7 +24,7 @@ export default function SideBar({children}: any) {
       <nav className="h-full flex flex-col justify-between bg-white border-r shadow-sm">
         <div>
           <div className="p-4 pb-2 flex justify-between items-center">
-            <img
+            <Image
               src="/images/logo.png"
               className={`overflow-hidden transition-all cursor-pointer ${
                 sideBar.isOpen ? "w-32" : "w-0"

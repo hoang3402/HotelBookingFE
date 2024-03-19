@@ -133,15 +133,6 @@ const ManagerUserPage = () => {
   }, [])
 
 
-  const onSearchChange = React.useCallback((value: any) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue("");
-    }
-  }, []);
-
   const filteredItems = React.useMemo(() => {
     if (filterValue) {
       return data.filter((item: User) => {
