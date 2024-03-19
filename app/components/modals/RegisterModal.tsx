@@ -95,7 +95,13 @@ const RegisterModal = () => {
         disabled={isLoading}
         register={register}
         errors={errors}
-        required
+        optional={{
+          required: "Email is required",
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Invalid email address'
+          }
+        }}
       />
       <div className={'flex gap-4'}>
         <Input
@@ -104,7 +110,9 @@ const RegisterModal = () => {
           disabled={isLoading}
           register={register}
           errors={errors}
-          required
+          optional={{
+            required: true
+          }}
         />
         <Input
           id="lastName"
@@ -112,16 +120,25 @@ const RegisterModal = () => {
           disabled={isLoading}
           register={register}
           errors={errors}
-          required
+          optional={{
+            required: "Last name is required"
+          }}
         />
       </div>
       <Input
         id="phone"
         label="Phone"
+        type={'number'}
         disabled={isLoading}
         register={register}
         errors={errors}
-        required
+        optional={{
+          required: "Phone is required",
+          minLength: {
+            value: 10,
+            message: 'Minimum length should be 10'
+          }
+        }}
       />
       <Input
         id="password"
@@ -130,7 +147,13 @@ const RegisterModal = () => {
         disabled={isLoading}
         register={register}
         errors={errors}
-        required
+        optional={{
+          required: "Password is required",
+          minLength: {
+            value: 6,
+            message: 'Minimum length should be 6'
+          }
+        }}
       />
     </div>
   )

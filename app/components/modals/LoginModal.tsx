@@ -2,8 +2,6 @@
 
 import {useCallback, useState} from "react";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
-import {FcGoogle} from "react-icons/fc";
-import {AiFillGithub} from "react-icons/ai";
 import {toast} from "react-hot-toast";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
@@ -13,9 +11,7 @@ import {domain} from "@/app/actions/getRoomById";
 import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
-import Button from "../Button";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-import {jwtDecode} from "jwt-decode";
 import {SaveToken} from "@/app/components/Ultility";
 
 const LoginModal = () => {
@@ -89,8 +85,15 @@ const LoginModal = () => {
         disabled={isLoading}
         register={register}
         errors={errors}
-        required
-
+        optional={
+          {
+            required: 'Email is required',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address'
+            }
+          }
+        }
       />
       <Input
         id="password"
@@ -99,7 +102,15 @@ const LoginModal = () => {
         disabled={isLoading}
         register={register}
         errors={errors}
-        required
+        optional={
+          {
+            required: 'Password is required',
+            minLength: {
+              value: 6,
+              message: 'Minimum length should be 6'
+            }
+          }
+        }
       />
     </div>
   )

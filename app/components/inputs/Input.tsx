@@ -3,6 +3,7 @@
 import {FieldErrors, FieldValues, UseFormRegister} from "react-hook-form";
 import {BiDollar} from "react-icons/bi";
 import React from "react";
+import {Tooltip} from "@nextui-org/tooltip";
 
 interface InputProps {
   id: string;
@@ -10,7 +11,7 @@ interface InputProps {
   type?: string;
   disabled?: boolean;
   formatPrice?: boolean;
-  required?: boolean;
+  optional?: object;
   register: UseFormRegister<FieldValues>,
   errors: FieldErrors
 }
@@ -22,7 +23,7 @@ const Input: React.FC<InputProps> = ({
                                        disabled,
                                        formatPrice,
                                        register,
-                                       required,
+                                       optional,
                                        errors,
                                      }) => {
   return (
@@ -41,7 +42,7 @@ const Input: React.FC<InputProps> = ({
       <input
         id={id}
         disabled={disabled}
-        {...register(id, {required})}
+        {...register(id, optional)}
         placeholder=" "
         type={type}
         className={`
@@ -62,8 +63,9 @@ const Input: React.FC<InputProps> = ({
           ${errors[id] ? 'focus:border-rose-500' : 'focus:border-black'}
         `}
       />
-      <label
-        className={`
+      <Tooltip hidden={!errors[id]} content={`${errors[id]?.message}`}>
+        <label
+          className={`
           absolute 
           text-md
           duration-150 
@@ -79,9 +81,10 @@ const Input: React.FC<InputProps> = ({
           peer-focus:-translate-y-4
           ${errors[id] ? 'text-rose-500' : 'text-zinc-400'}
         `}
-      >
-        {label}
-      </label>
+        >
+          {label}
+        </label>
+      </Tooltip>
     </div>
   );
 }
