@@ -132,7 +132,7 @@ const ManagerHotelPage = () => {
 
 
   const handleDetails = (id: number) => {
-    route.push(`/manager/hotel/detail/${id}`)
+    route.push(`/manager/hotel/${id}`)
   }
 
 
@@ -162,7 +162,7 @@ const ManagerHotelPage = () => {
           <Container>
             <div className={'flex flex-col gap-4 mt-4'}>
               <h1 className={'text-3xl font-bold'}>Hotels</h1>
-              <Button label={'Create new hotel'} onClick={() => route.push('/manager/hotel/detail/0')}/>
+              <Button label={'Create new hotel'} onClick={() => route.push('/manager/hotel/0')}/>
               <div>
                 {isLoading ? (
                   <Loader/>

@@ -75,7 +75,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const token = useAuthHeader()
   const route = useRouter()
   const id = params.id
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const {countries, provinces} = useLocation()
 
   const [country, setCountry] = useState<any>()
@@ -97,7 +97,6 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   useEffect(() => {
 
     if (id && id !== '0' && token) {
-      setIsLoading(true)
       getHotelById(id, token)
         .then((data: HotelDataDetails) => {
           setCountry(data.province.country.code)
@@ -128,7 +127,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
     }
     setIsLoading(false)
 
-  }, [])
+  }, [isLoading])
 
 
   const getProvinceByCountry = useCallback((code: string) => {
@@ -258,7 +257,16 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
 
 
   const handleDelete = (id: number) => {
-
+    fetch(`${domain}api/room/${id}/delete/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      }
+    }).then(res => {
+      res.ok ? toast.success('Delete room success!') : toast.error('Delete room failed!')
+      setIsLoading(true)
+    })
   }
 
 
