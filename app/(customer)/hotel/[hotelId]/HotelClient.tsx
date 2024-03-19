@@ -46,8 +46,8 @@ const HotelClient = ({listing}: any) => {
             <Card className={'p-4'}>
               <h2>Features</h2>
               <div className={'grid'}>
-                {listing?.features?.map((feature: any) => (
-                  <div className={'flex items-center gap-2'}>
+                {listing?.features?.map((feature: any, index: number) => (
+                  <div key={index} className={'flex items-center gap-2'}>
                     <MdDone/>
                     <p>{feature?.description}</p>
                   </div>

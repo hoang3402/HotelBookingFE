@@ -31,6 +31,7 @@ export default function SideBar({children}: any) {
               }`}
               alt=""
               onClick={() => route.push('/')}
+              width={200} height={200}
             />
             <button
               onClick={sideBar.toggle}
@@ -47,10 +48,11 @@ export default function SideBar({children}: any) {
 
         {isClient ? (
           <div className="border-t flex p-3">
-            <img
-              src={`https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true&name=${user?.first_name}+${user?.last_name}`}
+            <Image
+              src={`https://ui-avatars.com/api/?format=png&background=c7d2fe&color=3730a3&bold=true&name=${user?.first_name}+${user?.last_name}`}
               alt=""
               className="w-10 h-10 rounded-md"
+              width={200} height={200}
             />
             <div
               className={`
