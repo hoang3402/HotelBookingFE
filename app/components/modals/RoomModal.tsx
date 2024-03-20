@@ -9,9 +9,12 @@ import {toast} from "react-hot-toast";
 import {eachDayOfInterval, endOfMonth, startOfMonth} from "date-fns";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {FormattedPrice} from "@/app/components/Ultility";
+import {useRouter} from "next/navigation";
 
 const RoomModal = () => {
+
   let roomModal = useRoomModal((state) => state)
+  const route = useRouter()
   const token = useAuthHeader()
   const [roomData, setRoomData] = useState<any>(null)
   const [selectedRange, setSelectedRange] = useState({
@@ -157,6 +160,7 @@ const RoomModal = () => {
       .then((data) => {
         console.log(data)
         toast.success("Booking success")
+        goToPayment(data)
       })
       .catch((error) => {
         console.log(error)
@@ -166,6 +170,41 @@ const RoomModal = () => {
         roomModal.onClose()
       })
   }
+
+
+  const goToPayment = (data: any) => {
+
+    let amount = 0
+
+    fetch(`${domain}api/exchange_rate/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "amount": data.total_price_usd,
+        "from_currency": "USD",
+        "to_currency": "VND" // VNPay only support VND
+      })
+    }).then((res) => res.json())
+      .then((data) => {
+        amount = data.price
+        fetch(`${domain}api/vnpay/payment_url/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ?? ''
+          },
+          body: JSON.stringify({
+            "amount": amount,
+          })
+        }).then((res) => res.json())
+          .then((data) => {
+            window.location.href = data.payment_url
+          })
+      })
+  }
+
 
   return (
     <Modal
