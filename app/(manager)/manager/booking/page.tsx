@@ -7,7 +7,7 @@ import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loader from "@/app/components/Loader";
 import NextAuth from "@auth-kit/next";
-import {BookingData, BookingDataDetails, Result} from "@/app/type";
+import {BookingData, BookingDataDetails} from "@/app/type";
 import {toast} from "react-hot-toast";
 import Link from "next/link";
 import {Tooltip} from "@nextui-org/tooltip";
