@@ -10,6 +10,7 @@ import {Pagination} from "@nextui-org/pagination";
 import qs from "query-string";
 import Loader from "@/app/components/Loader";
 import {useRouter} from "next/navigation";
+import HelpWidget from "@/app/components/chatbot/HelpWidget";
 
 interface HomeProps {
   searchParams: IListingsParams
@@ -95,6 +96,7 @@ const Home = ({searchParams}: HomeProps) => {
           </>
         )}
       </div>
+      <HelpWidget/>
     </Container>
   );
 }
