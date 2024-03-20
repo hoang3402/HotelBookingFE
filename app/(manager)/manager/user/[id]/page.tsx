@@ -87,7 +87,7 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 		}).then(res => res.ok ?
 			toast.success('Update user success!') :
 			toast.error('Update user failed!'))
-			.then(res => {
+			.then(_ => {
 				route.back()
 			})
 	}
