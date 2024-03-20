@@ -1,5 +1,5 @@
 import {domain} from "@/app/actions/getRoomById";
-import {HotelData, Result} from "@/app/type";
+import {Result} from "@/app/type";
 import {toast} from "react-hot-toast";
 
 export async function getHotels(token: string, page: number) {
