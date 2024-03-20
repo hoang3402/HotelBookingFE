@@ -107,21 +107,20 @@ const StaffBookingPage = () => {
 
 
   const handleConfirmed = (id: number) => {
-    fetch(`${domain}api/staff/booking/${id}/edit/`, {
-      method: "PATCH",
+    fetch(`${domain}api/staff/booking/${id}/confirm/`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `${token}`
       },
-      body: JSON.stringify({
-        status: "Confirmed"
-      })
     })
       .then(res => res.json())
       .then(res => {
-        if (res.status === "success") {
-          toast.success(res.message)
+        if (res.error) {
+          toast.error(res.message)
+          return;
         }
+        toast.success(res.status)
       })
       .catch(error => {
         console.error("Error fetching data:", error);
