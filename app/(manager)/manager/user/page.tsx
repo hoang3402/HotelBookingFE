@@ -19,6 +19,7 @@ import { domain } from "@/app/actions/getRoomById";
 import { toast } from "react-hot-toast";
 import { Pagination } from "@nextui-org/pagination";
 import { Input } from "@nextui-org/input";
+import Button from "@/app/components/Button";
 
 const columns = [
   {
@@ -42,8 +43,8 @@ const columns = [
     label: "Role",
   },
   {
-    key: "status",
-    label: "Status",
+    key: "is_active",
+    label: "Is active",
   },
   {
     key: "action",
@@ -81,6 +82,7 @@ const ManagerUserPage = () => {
   const token = useAuthHeader()
   const route = useRouter()
   const [isLoading, setIsLoading] = useState(true)
+  const [reload, setReload] = useState(0)
   const [data, setData] = useState<any[]>([])
   const [page, setPage] = React.useState(1);
   const [pages, setPages] = React.useState(1);
@@ -89,17 +91,6 @@ const ManagerUserPage = () => {
     column: 'id',
     direction: 'descending'
   })
-
-
-  useEffect(() => {
-    if (token) {
-      getUsers(token, page, 10).then((res: Result) => {
-        setData(res.results)
-        setPages(Math.ceil(res.count / res.results.length))
-      })
-    }
-    setIsLoading(false)
-  }, [])
 
 
   const handleDetails = (id: number) => {
@@ -114,8 +105,22 @@ const ManagerUserPage = () => {
         'Authorization': `${token}`
       }
     })
-      .then(res => res.ok ? toast.success('Delete user success!') : toast.error('Delete user failed!'))
+      .then(res => {
+        res.ok ? toast.success('Delete user success!') : toast.error('Delete user failed!')
+        setReload(reload + 1)
+      })
   }
+
+
+  useEffect(() => {
+    if (token) {
+      getUsers(token, page, 10).then((res: Result) => {
+        setData(res.results)
+        setPages(Math.ceil(res.count / res.results.length))
+      })
+    }
+    setIsLoading(false)
+  }, [reload])
 
 
   const renderCell = useCallback((data: User, columnKey: React.Key) => {
@@ -125,6 +130,8 @@ const ManagerUserPage = () => {
         return (
           <Link href={`/hotel/${data.id}`}>{cellValue}</Link>
         )
+      case 'is_active':
+        return cellValue ? 'Active' : 'Inactive'
       case 'action':
         return action(() => handleDetails(data.id), () => handleDelete(data.id));
       default:
@@ -162,6 +169,9 @@ const ManagerUserPage = () => {
                 ) : (
                   <div className={'flex flex-col gap-5'}>
                     <Input value={filterValue} onValueChange={setFilterValue} placeholder="Search" />
+                    <div>
+                      <Button label="Add new user" onClick={() => route.push('/manager/user/0')} />
+                    </div>
                     <MyTable
                       title={'Users'}
                       columns={columns}

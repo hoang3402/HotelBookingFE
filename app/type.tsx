@@ -12,6 +12,7 @@ export interface User {
   email: string
   number_phone: string
   role: string
+  is_active: boolean
 }
 
 export interface Country {

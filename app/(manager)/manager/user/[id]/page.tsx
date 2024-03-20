@@ -6,10 +6,11 @@ import Container from "@/app/components/Container";
 import Input from "@/app/components/inputs/Input";
 import Loader from "@/app/components/Loader";
 import { User } from "@/app/type";
+import { Card } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 
@@ -23,7 +24,9 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 		register,
 		handleSubmit,
 		setValue,
-		formState: { errors },
+		formState: {
+			errors,
+		},
 	} = useForm<FieldValues>({
 		defaultValues: {
 			first_name: "",
@@ -31,11 +34,19 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 			email: "",
 			number_phone: "",
 			role: "",
+			is_active: true,
+			password: ""
 		},
 	})
 
 
 	useEffect(() => {
+
+		if (params.id === '0') {
+			setIsLoading(false)
+			return
+		}
+
 		fetch(`${domain}api/auth/user/${params.id}/`, {
 			method: "GET",
 			headers: {
@@ -49,6 +60,7 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 				setValue('email', res.email)
 				setValue('number_phone', res.number_phone)
 				setValue('role', res.role)
+				setValue('is_active', res.is_active)
 				setIsLoading(false)
 			})
 	}, [])
@@ -58,15 +70,26 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 		route.back()
 	}
 
-	function handleUpdate(): void {
-		fetch(`${domain}api/auth/user/${params.id}/edit/`, {
-			method: "PATCH",
+	const onSubmit: SubmitHandler<FieldValues> = (data) => {
+		let url = `${domain}api/auth/user/${params.id}/edit/`
+		if (params.id === '0') {
+			url = `${domain}api/auth/user/create/`
+		} else {
+			data.password = undefined
+		}
+		fetch(url, {
+			method: params.id === '0' ? "POST" : "PATCH",
 			headers: {
 				"Content-Type": "application/json",
 				"Authorization": `${token}`
 			},
-			body: JSON.stringify({ register })
-		}).then(res => res.ok ? toast.success('Update user success!') : toast.error('Update user failed!'))
+			body: JSON.stringify(data)
+		}).then(res => res.ok ?
+			toast.success('Update user success!') :
+			toast.error('Update user failed!'))
+			.then(res => {
+				route.back()
+			})
 	}
 
 	return (
@@ -117,6 +140,21 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 								}
 							}}
 						/>
+						{params.id === '0' && (
+							<Input
+								id={"password"}
+								errors={errors}
+								register={register}
+								label="Password"
+								optional={params.id === '0' ? {
+									required: "Password is required",
+									minLength: {
+										value: 6,
+										message: "Password must have at least 6 characters",
+									}
+								} : {}}
+							/>
+						)}
 						<Input
 							id={"number_phone"}
 							errors={errors}
@@ -130,19 +168,32 @@ const ManagerUserPage = ({ params }: { params: { id: string } }) => {
 								}
 							}}
 						/>
-						<div className="flex gap-4 justify-center items-center w-[150px] m-auto">
-							<label htmlFor="role">Role: </label>
-							<select
-								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-								{...register("role", { required: true })}
-							>
-								<option value="user">user</option>
-								<option value="staff">staff</option>
-								<option value="admin">admin</option>
-							</select>
+						<div className="flex gap-4 justify-center items-center m-auto">
+							<Card className="p-4">
+								<div className="flex items-center gap-2">
+									<label htmlFor="role">Role: </label>
+									<select
+										className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										{...register("role", { required: true })}
+									>
+										<option value="user">user</option>
+										<option value="staff">staff</option>
+										<option value="admin">admin</option>
+									</select>
+								</div>
+							</Card>
+							<Card className="p-6">
+								<div className="flex items-center gap-2">
+									<label htmlFor="is_active">Is active: </label>
+									<input type="checkbox" {...register("is_active")} />
+								</div>
+							</Card>
 						</div>
 						<div className="flex gap-5">
-							<Button label="Update" onClick={handleUpdate} />
+							<Button
+								label={params.id === '0' ? "Create" : "Update"}
+								onClick={() => handleSubmit(onSubmit)()}
+							/>
 							<Button label="Cancel" onClick={handleCancel} />
 						</div>
 					</div>
