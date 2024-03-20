@@ -3,9 +3,9 @@ import {Result} from "@/app/type";
 import {toast} from "react-hot-toast";
 
 
-export async function getBookings(token: string) {
+export async function getBookings(token: string, page: number, page_size: number) {
   try {
-    return fetch(`${domain}api/staff/booking/`, {
+    return fetch(`${domain}api/staff/booking/?page=${page}&page_size=${page_size}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

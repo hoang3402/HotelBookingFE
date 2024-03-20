@@ -158,7 +158,7 @@ const StaffBookingPage = () => {
 
   useEffect(() => {
     if (token) {
-      getBookings(token).then((res: any) => {
+      getBookings(token, page, 10).then((res: any) => {
         let _data: BookingData[] = []
         res.results.forEach((item: BookingDataDetails) => {
             _data.push({
@@ -177,7 +177,7 @@ const StaffBookingPage = () => {
         setIsLoading(false)
       })
     }
-  }, [reload])
+  }, [reload, page])
 
 
   const renderCell = React.useCallback((data: BookingData, columnKey: React.Key) => {
