@@ -119,7 +119,7 @@ const ManagerHotelPage = () => {
             name: item.name,
             phone_number: item.phone_number,
             email: item.email,
-            location: `${item.province.name} - ${item.province.country.name}`,
+            location: `${item.city.province.name} - ${item.city.province.country.name}`,
             action: item.id
           })
         })

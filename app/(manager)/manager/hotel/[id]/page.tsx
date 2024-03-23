@@ -99,8 +99,8 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
     if (id && id !== '0' && token) {
       getHotelById(id, token)
         .then((data: HotelDataDetails) => {
-          setCountry(data.province.country.code)
-          setProvince(data.province.id)
+          setCountry(data.city.province.country.code)
+          setProvince(data.city.province.id)
           setName(data.name)
           setEmail(data.email)
           setPhone_number(data.phone_number)
@@ -119,7 +119,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
               price: item.price,
               is_available: item.is_available,
               room_type: item.room_type.name,
-              currency: item.hotel.province.country.currency
+              currency: item.hotel.city.province.country.currency
             })
           })
           setRooms(_temp)
