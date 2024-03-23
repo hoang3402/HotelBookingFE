@@ -10,11 +10,14 @@ import {eachDayOfInterval, endOfMonth, startOfMonth} from "date-fns";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {FormattedPrice} from "@/app/components/Ultility";
 import {useRouter} from "next/navigation";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import {User} from "@/app/type";
 
 const RoomModal = () => {
 
   let roomModal = useRoomModal((state) => state)
   const route = useRouter()
+  const user: User | null = useAuthUser()
   const token = useAuthHeader()
   const [roomData, setRoomData] = useState<any>(null)
   const [selectedRange, setSelectedRange] = useState({
@@ -117,7 +120,7 @@ const RoomModal = () => {
   }, [selectedRange])
 
   const bodyContent = (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-h-80 overflow-scroll">
       <div className={'flex flex-col'}>
         <h2 className={'text-xl'}>{roomData?.description}</h2>
         <span>Room type: {roomData?.room_type?.name}</span>
@@ -144,6 +147,11 @@ const RoomModal = () => {
 
   const handelSubmit = () => {
 
+    if (user === null) {
+      toast.error("Please login before booking")
+      return
+    }
+
     fetch(`${domain}api/booking/create/`, {
       method: "POST",
       headers: {
@@ -154,9 +162,15 @@ const RoomModal = () => {
         "room_id": roomData.id,
         "check_in_date": selectedRange.startDate.toISOString().split('T')[0],
         "check_out_date": selectedRange.endDate.toISOString().split('T')[0],
-        "currency": roomData.hotel.province.country.currency
+        "currency": roomData.hotel.city.province.country.currency
       })
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (res.ok) {
+        return res.json()
+      } else {
+        toast.error(`Booking failed}`)
+      }
+    })
       .then((data) => {
         console.log(data)
         toast.success("Booking success")
@@ -164,7 +178,7 @@ const RoomModal = () => {
       })
       .catch((error) => {
         console.log(error)
-        toast.error("Booking failed")
+        toast.error(`Booking failed: ${error.detail}`)
       })
       .finally(() => {
         roomModal.onClose()

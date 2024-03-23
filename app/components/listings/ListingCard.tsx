@@ -82,7 +82,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
           {data.name}
         </div>
         <div className="font-light text-neutral-500">
-          {data.province.name}, {data.province.country.name}
+          {data.city.province.name}, {data.city.province.country.name}
         </div>
         {onAction && actionLabel && (
           <Button

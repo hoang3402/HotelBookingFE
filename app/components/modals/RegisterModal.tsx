@@ -54,13 +54,13 @@ const RegisterModal = () => {
         "email": data.email,
         "password": data.password,
         "number_phone": data.phone,
-        "role": "user"
       }),
     }).then(res => res.json()
       .then(data => {
         if (SaveToken(signIn, data)) {
           // Redirect or do-something
           toast.success('Register successfully');
+          loginModal.onClose();
         } else {
           //Throw error
           toast.error('Something went wrong');
@@ -71,6 +71,7 @@ const RegisterModal = () => {
       }))
       .catch(error => {
         console.log(error)
+        toast.error('Something went wrong');
       })
       .finally(() => {
         setIsLoading(false)

@@ -50,7 +50,7 @@ export interface HotelData {
   average_rating: number
   email: string
   image: string
-  province: Province
+  city: City
 }
 
 
@@ -63,7 +63,7 @@ export interface HotelDataDetails {
   average_rating: number
   email: string
   image: string
-  province: Province
+  city: City
   features: {
     description: string
   }[]
@@ -117,4 +117,11 @@ export interface RoomData {
   is_available: boolean
   room_type: RoomType
   hotel: HotelData
+}
+
+export interface Review {
+  id: number
+  comment: string
+  rating: number
+  created_at: string
 }

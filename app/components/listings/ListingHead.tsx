@@ -25,7 +25,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
     <>
       <Heading
         title={title}
-        subtitle={`${location?.name}, ${location?.country?.name}`}
+        subtitle={`${location?.name}, ${location?.province?.country?.name}`}
       />
       <div className="
           w-full

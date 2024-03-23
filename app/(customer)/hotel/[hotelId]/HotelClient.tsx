@@ -7,11 +7,19 @@ import {ListingRoom} from "@/app/components/listings/ListingRoom";
 import Loader from "@/app/components/Loader";
 import {MdDone} from "react-icons/md";
 import {Card} from "@nextui-org/card";
+import Review from "@/app/components/Review";
+import {useRouter} from "next/navigation";
 
 const HotelClient = ({listing}: any) => {
 
   const [isClient, setIsClient] = useState(false)
   const [isShow, setIsShow] = useState(false)
+  const route = useRouter()
+
+  if (!listing || listing === 'undefined') {
+    route.push('/')
+  }
+
 
   useEffect(() => {
     setIsClient(true)
@@ -25,7 +33,7 @@ const HotelClient = ({listing}: any) => {
             <ListingHead
               title={listing?.name}
               imageSrc={listing?.image}
-              location={listing?.province}
+              location={listing?.city}
               id={listing?.id}
               currentUser={null}
             />
@@ -58,8 +66,10 @@ const HotelClient = ({listing}: any) => {
             )}
 
             <ListingRoom
-              rooms={listing?.room_set} currency={listing?.province?.country?.currency}
+              rooms={listing?.room_set} currency={listing?.city?.province?.country?.currency}
             />
+
+            <Review hotelId={listing?.id}></Review>
           </div>
         </div>
       )}
