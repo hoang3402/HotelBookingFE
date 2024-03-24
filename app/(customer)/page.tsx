@@ -12,20 +12,25 @@ import Loader from "@/app/components/Loader";
 import {useRouter} from "next/navigation";
 import HelpWidget from "@/app/components/chatbot/HelpWidget";
 
+
 interface HomeProps {
   searchParams: IListingsParams
 }
 
+
 const Home = ({searchParams}: HomeProps) => {
+
   const [listings, setListings] = React.useState<Result | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const route = useRouter();
+  const hotels = getHotels(searchParams);
   const [page, setPage] = React.useState(1);
   const [pages, setPages] = React.useState(1);
 
+
   useEffect(() => {
     setIsLoading(true)
-    getHotels(searchParams).then((data) => {
+    hotels.then((data) => {
       setListings(data)
       setPages(Math.ceil(data.count / 12))
       setIsLoading(false)
@@ -49,6 +54,7 @@ const Home = ({searchParams}: HomeProps) => {
 
     route.push(url)
   }
+
 
   return (
     <Container>
