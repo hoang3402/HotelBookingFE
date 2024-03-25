@@ -1,16 +1,9 @@
-'use client';
-
-
-import React, {useEffect} from "react";
 import getHotels, {IListingsParams} from "@/app/actions/getHotels";
 import ListingCard from "@/app/components/listings/ListingCard";
 import Container from "@/app/components/Container";
-import {HotelData, Result} from "@/app/type";
-import {Pagination} from "@nextui-org/pagination";
-import qs from "query-string";
-import Loader from "@/app/components/Loader";
-import {useRouter} from "next/navigation";
+import {HotelData} from "@/app/type";
 import HelpWidget from "@/app/components/chatbot/HelpWidget";
+import MyPagination from "@/app/components/MyPagination";
 
 
 interface HomeProps {
@@ -18,54 +11,21 @@ interface HomeProps {
 }
 
 
-const Home = ({searchParams}: HomeProps) => {
+const Home = async ({searchParams}: HomeProps) => {
 
-  const [listings, setListings] = React.useState<Result | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const route = useRouter();
-  const hotels = getHotels(searchParams);
-  const [page, setPage] = React.useState(1);
-  const [pages, setPages] = React.useState(1);
-
-
-  useEffect(() => {
-    setIsLoading(true)
-    hotels.then((data) => {
-      setListings(data)
-      setPages(Math.ceil(data.count / 12))
-      setIsLoading(false)
-    })
-  }, [page, searchParams]);
-
-  function handlePageChange(page: number) {
-    setPage(page)
-    setIsLoading(true)
-    let currentQuery = {};
-
-    const updatedQuery: any = {
-      ...currentQuery,
-      page: page
-    };
-
-    const url = qs.stringifyUrl({
-      url: '/',
-      query: updatedQuery,
-    }, {skipNull: true});
-
-    route.push(url)
-  }
+  const hotels = await getHotels(searchParams);
 
 
   return (
     <Container>
       <div className={'flex flex-col gap-5'}>
-        {isLoading ? (
-          <Loader/>
+        {hotels.count < 1 ? (
+          <div className={'text-3xl font-bold'}>No hotel found</div>
         ) : (
           <>
             <div className={'w-full flex justify-end font-bold text-xl'}>
-              {listings && (
-                <div>Number hotel available: {listings.count}</div>
+              {hotels && (
+                <div>Number hotel available: {hotels.count}</div>
               )}
             </div>
             <div
@@ -80,7 +40,7 @@ const Home = ({searchParams}: HomeProps) => {
                   gap-8
                 "
             >
-              {listings && listings.results.map((listing: HotelData, index) => (
+              {hotels && hotels.results.map((listing: HotelData, index: number) => (
                 <ListingCard
                   key={`${listing.id + index}${listing.name}`}
                   data={listing}
@@ -88,17 +48,7 @@ const Home = ({searchParams}: HomeProps) => {
               ))}
             </div>
 
-            <div className="flex w-full justify-center">
-              <Pagination
-                isCompact
-                showControls
-                showShadow
-                color="secondary"
-                page={page}
-                total={pages}
-                onChange={(page) => handlePageChange(page)}
-              />
-            </div>
+            <MyPagination pages={Math.ceil((hotels?.count ?? 1) / 12)}/>
           </>
         )}
       </div>

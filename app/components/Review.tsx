@@ -48,14 +48,20 @@ const Reviews = ({hotelId}: any) => {
 
   return (
     <div>
-      <h2 className={'text-2xl font-bold'}>{totalReview} reviews</h2>
-      <Card className={'p-4 flex flex-col gap-4'}>
-        {isLoading ? <Loader/> : (
-          review.map((item: any) => (
-            <ReviewItem key={item.id} data={item}/>
-          ))
-        )}
-      </Card>
+      {review.length > 0 ? (
+        <>
+          <h2 className={'text-2xl font-bold'}>{totalReview} reviews</h2>
+          <Card className={'p-4 flex flex-col gap-4'}>
+            {isLoading ? <Loader/> : (
+              review.map((item: any) => (
+                <ReviewItem key={item.id} data={item}/>
+              ))
+            )}
+          </Card>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }
