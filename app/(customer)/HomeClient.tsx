@@ -53,14 +53,20 @@ const HomeClient = () => {
   return (
     <div>
       {isLoading ? <Loader/> : (
-        <div>
+        <>
+        {hotels.results === undefined ? (
           <div className={'w-full flex justify-end font-bold text-xl'}>
-            {hotels && (
-              <div>Number hotel available: {hotels.count}</div>
-            )}
+            <div>Server error</div>
           </div>
-          <div
-            className="
+        ) : (
+          <div>
+            <div className={'w-full flex justify-end font-bold text-xl'}>
+              {hotels && (
+                <div>Number hotel available: {hotels.count}</div>
+                )}
+              </div>
+              <div
+                className="
                   grid
                   grid-cols-1
                   sm:grid-cols-2
@@ -70,27 +76,29 @@ const HomeClient = () => {
                   2xl:grid-cols-6
                   gap-8
                 "
-          >
-            {hotels && hotels.results.map((listing: HotelData, index: number) => (
-              <ListingCard
-                key={`${listing.id + index}${listing.name}`}
-                data={listing}
-              />
-            ))}
-          </div>
+              >
+                {hotels && hotels.results.map((listing: HotelData, index: number) => (
+                  <ListingCard
+                    key={`${listing.id + index}${listing.name}`}
+                    data={listing}
+                  />
+                ))}
+              </div>
 
-          <div className="flex w-full justify-center">
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="secondary"
-              page={page}
-              total={totalPages}
-              onChange={(page) => handlePageChange(page)}
-            />
-          </div>
-        </div>
+              <div className="flex w-full justify-center">
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="secondary"
+                  page={page}
+                  total={totalPages}
+                  onChange={(page) => handlePageChange(page)}
+                />
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
