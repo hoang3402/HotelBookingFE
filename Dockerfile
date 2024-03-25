@@ -1,4 +1,4 @@
-From node:18 AS builder
+From dockerhub.zeabur.cloud/library/node:18node:18 AS builder
 
 EXPOSE 3000
 
