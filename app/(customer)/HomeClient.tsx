@@ -2,19 +2,34 @@
 
 import {HotelData, Result} from "@/app/type";
 import ListingCard from "@/app/components/listings/ListingCard";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import qs from "query-string";
 import {Pagination} from "@nextui-org/pagination";
+import getHotels from "@/app/actions/getHotels";
+import Loader from "@/app/components/Loader";
 
-const HomeClient = ({hotels}: { hotels: Result }) => {
+const HomeClient = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hotels, setHotels] = useState<any>([]);
   const params = useSearchParams();
-  const totalPages = Math.ceil(hotels.count / 12)
   const route = useRouter();
 
+  useEffect(() => {
+    setIsLoading(true)
+    let currentQuery = qs.parse(params.toString())
+    console.log(currentQuery)
+    getHotels(currentQuery).then((res: Result) => {
+      setTotalPages(Math.ceil(res.count / 12))
+      setHotels(res)
+      setIsLoading(false)
+    })
+  }, [params])
+
+
   const handlePageChange = (page: number) => {
-    setPage(page)
     let currentQuery = {};
 
     if (params) {
@@ -32,17 +47,20 @@ const HomeClient = ({hotels}: { hotels: Result }) => {
     }, {skipNull: true});
 
     route.push(url)
+    setPage(page)
   }
 
   return (
     <div>
-      <div className={'w-full flex justify-end font-bold text-xl'}>
-        {hotels && (
-          <div>Number hotel available: {hotels.count}</div>
-        )}
-      </div>
-      <div
-        className="
+      {isLoading ? <Loader/> : (
+        <div>
+          <div className={'w-full flex justify-end font-bold text-xl'}>
+            {hotels && (
+              <div>Number hotel available: {hotels.count}</div>
+            )}
+          </div>
+          <div
+            className="
                   grid
                   grid-cols-1
                   sm:grid-cols-2
@@ -52,26 +70,28 @@ const HomeClient = ({hotels}: { hotels: Result }) => {
                   2xl:grid-cols-6
                   gap-8
                 "
-      >
-        {hotels && hotels.results.map((listing: HotelData, index: number) => (
-          <ListingCard
-            key={`${listing.id + index}${listing.name}`}
-            data={listing}
-          />
-        ))}
-      </div>
+          >
+            {hotels && hotels.results.map((listing: HotelData, index: number) => (
+              <ListingCard
+                key={`${listing.id + index}${listing.name}`}
+                data={listing}
+              />
+            ))}
+          </div>
 
-      <div className="flex w-full justify-center">
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="secondary"
-          page={page}
-          total={totalPages}
-          onChange={(page) => handlePageChange(page)}
-        />
-      </div>
+          <div className="flex w-full justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={totalPages}
+              onChange={(page) => handlePageChange(page)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
