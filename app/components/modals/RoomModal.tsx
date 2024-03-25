@@ -9,14 +9,12 @@ import {toast} from "react-hot-toast";
 import {eachDayOfInterval, endOfMonth, startOfMonth} from "date-fns";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {FormattedPrice} from "@/app/components/Ultility";
-import {useRouter} from "next/navigation";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {User} from "@/app/type";
 
 const RoomModal = () => {
 
   let roomModal = useRoomModal((state) => state)
-  const route = useRouter()
   const user: User | null = useAuthUser()
   const token = useAuthHeader()
   const [roomData, setRoomData] = useState<any>(null)
