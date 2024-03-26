@@ -33,3 +33,21 @@ export async function getHotelById(id: string, token: string) {
       toast.error(err.detail)
     })
 }
+
+export async function getFeaturesByHotelId(id: string) {
+  return fetch(`${domain}api/feature-hotel/${id}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      return data
+    })
+    .catch(err => {
+      console.log(err)
+      toast.error(err.detail)
+    })
+}

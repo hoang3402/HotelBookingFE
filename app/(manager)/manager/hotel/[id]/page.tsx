@@ -6,7 +6,7 @@ import Loader from "@/app/components/Loader";
 import React, {useCallback, useEffect, useState} from "react";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {Input, Textarea} from "@nextui-org/input";
-import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
+import {Autocomplete, AutocompleteItem, Select, SelectItem} from "@nextui-org/react";
 import {useLocation} from "@/app/hooks/useCountries";
 import {HotelDataDetails, Province, RoomData, User} from "@/app/type";
 import FileUploader from "@/app/components/FileUploader";
@@ -15,13 +15,14 @@ import {useRouter} from "next/navigation";
 import {toast} from "react-hot-toast";
 import {domain} from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import {getHotelById} from "@/app/actions/staff/getHotels";
+import {getFeaturesByHotelId, getHotelById} from "@/app/actions/staff/getHotels";
 import MyTable from "@/app/components/MyTable";
 import {SortDescriptor} from "@nextui-org/table";
 import {FormattedPrice} from "@/app/components/Ultility";
 import {Tooltip} from "@nextui-org/tooltip";
 import {EyeIcon} from "@nextui-org/shared-icons";
 import {HiMiniXMark} from "react-icons/hi2";
+import {useFeatures} from "@/app/hooks/useFeatures";
 
 
 interface IParams {
@@ -77,7 +78,9 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const id = params.id
   const [isLoading, setIsLoading] = useState(true)
   const {countries, provinces} = useLocation()
+  const {features, fetchFeatures} = useFeatures()
 
+  const [featuresData, setFeaturesData] = useState<any>()
   const [country, setCountry] = useState<any>()
   const [province, setProvince] = useState<any>()
   const [image, setImage] = useState<string>()
@@ -86,7 +89,6 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const [phone_number, setPhone_number] = useState('')
   const [address, setAddress] = useState('')
   const [description, setDescription] = useState('')
-
 
   const [rooms, setRooms] = useState<any>([])
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -97,6 +99,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   useEffect(() => {
 
     if (id && id !== '0' && token) {
+      fetchFeatures()
       getHotelById(id, token)
         .then((data: HotelDataDetails) => {
           setCountry(data.city.province.country.code)
@@ -124,9 +127,20 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
           })
           setRooms(_temp)
         })
+        .finally(() => {
+          setIsLoading(false)
+        })
+      getFeaturesByHotelId(id)
+        .then((data: any) => {
+          let _temp: any = []
+          data.forEach((item: any) => {
+            _temp.push(item.feature)
+          })
+          setFeaturesData(_temp)
+        })
+    } else {
+      setIsLoading(false)
     }
-    setIsLoading(false)
-
   }, [isLoading])
 
 
@@ -299,7 +313,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
         <NextAuth fallbackPath={'/'}>
           <Container>
             <div className={'flex flex-col gap-4 mt-4'}>
-              <h1 className={'text-3xl font-bold'}>{id === '0' ? 'Create' : 'Update'} new hotel</h1>
+              <h1 className={'text-3xl font-bold'}>{id === '0' ? 'Create new' : 'Update'} hotel</h1>
               <div>
                 {isLoading ? (
                   <Loader/>
@@ -338,8 +352,6 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
                       onValueChange={setAddress}
                     />
 
-                    {/* create grid 2 side*/}
-
                     <div className={'grid grid-cols-2 gap-4'}>
                       <div className={'flex flex-col gap-4 w-full'}>
                         <Autocomplete
@@ -365,6 +377,19 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
                               {_province.name}
                             </AutocompleteItem>)}
                         </Autocomplete>
+
+                        <Select
+                          label="Features"
+                          placeholder="Select an feature"
+                          selectionMode="multiple"
+                          selectedKeys={featuresData}
+                        >
+                          {features.map((feature: any) => (
+                            <SelectItem key={feature.code} value={feature.code}>
+                              {feature.description}
+                            </SelectItem>
+                          ))}
+                        </Select>
 
                         <Textarea
                           label="Description"
