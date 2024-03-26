@@ -383,6 +383,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
                           placeholder="Select an feature"
                           selectionMode="multiple"
                           selectedKeys={featuresData}
+                          onSelectionChange={setFeaturesData}
                         >
                           {features.map((feature: any) => (
                             <SelectItem key={feature.code} value={feature.code}>
