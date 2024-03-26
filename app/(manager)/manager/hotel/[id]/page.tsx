@@ -3,26 +3,26 @@
 import NextAuth from "@auth-kit/next";
 import Container from "@/app/components/Container";
 import Loader from "@/app/components/Loader";
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import {Input, Textarea} from "@nextui-org/input";
-import {Autocomplete, AutocompleteItem, Select, SelectItem} from "@nextui-org/react";
-import {useLocation} from "@/app/hooks/useCountries";
-import {HotelDataDetails, Province, RoomData, User} from "@/app/type";
+import { Input, Textarea } from "@nextui-org/input";
+import { Autocomplete, AutocompleteItem, Select, SelectItem } from "@nextui-org/react";
+import { useLocation } from "@/app/hooks/useCountries";
+import { HotelDataDetails, Province, RoomData, User } from "@/app/type";
 import FileUploader from "@/app/components/FileUploader";
 import Button from "@/app/components/Button";
-import {useRouter} from "next/navigation";
-import {toast} from "react-hot-toast";
-import {domain} from "@/app/actions/getRoomById";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { domain } from "@/app/actions/getRoomById";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import {getFeaturesByHotelId, getHotelById} from "@/app/actions/staff/getHotels";
+import { getFeaturesByHotelId, getHotelById } from "@/app/actions/staff/getHotels";
 import MyTable from "@/app/components/MyTable";
-import {SortDescriptor} from "@nextui-org/table";
-import {FormattedPrice} from "@/app/components/Ultility";
-import {Tooltip} from "@nextui-org/tooltip";
-import {EyeIcon} from "@nextui-org/shared-icons";
-import {HiMiniXMark} from "react-icons/hi2";
-import {useFeatures} from "@/app/hooks/useFeatures";
+import { SortDescriptor } from "@nextui-org/table";
+import { FormattedPrice } from "@/app/components/Ultility";
+import { Tooltip } from "@nextui-org/tooltip";
+import { EyeIcon } from "@nextui-org/shared-icons";
+import { HiMiniXMark } from "react-icons/hi2";
+import { useFeatures } from "@/app/hooks/useFeatures";
 
 
 interface IParams {
@@ -70,15 +70,15 @@ const columns = [
 ]
 
 
-const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
+const ManagerDetailHotelPage = ({ params }: { params: IParams }) => {
 
   const user: User | null = useAuthUser()
   const token = useAuthHeader()
   const route = useRouter()
   const id = params.id
   const [isLoading, setIsLoading] = useState(true)
-  const {countries, provinces} = useLocation()
-  const {features, fetchFeatures} = useFeatures()
+  const { countries, provinces } = useLocation()
+  const { features, fetchFeatures } = useFeatures()
 
   const [featuresData, setFeaturesData] = useState<any>()
   const [country, setCountry] = useState<any>()
@@ -181,6 +181,10 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const handleCreate = () => {
     handleCheckInput()
 
+    let _temp: any[] = []
+    featuresData?.forEach((e: any) => {
+      _temp.push({ code: e })
+    })
     fetch(`${domain}api/hotel/create/`, {
       method: 'POST',
       headers: {
@@ -194,7 +198,8 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
         province,
         phone_number,
         email,
-        image
+        image,
+        features: _temp
       }),
     }).then(res => res.json())
       .then(res => {
@@ -214,6 +219,10 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
   const handleEdit = () => {
     handleCheckInput()
 
+    let _temp: any[] = []
+    featuresData?.forEach((e: any) => {
+      _temp.push({ code: e })
+    })
     fetch(`${domain}api/hotel/${id}/edit/`, {
       method: 'PATCH',
       headers: {
@@ -227,7 +236,8 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
         province,
         phone_number,
         email,
-        image
+        image,
+        features: _temp
       }),
     }).then(res => res.json())
       .then(res => {
@@ -245,20 +255,20 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
     return (
       <div className="relative flex items-center gap-2">
         <Tooltip content="Details">
-        <span
-          className="text-lg text-default-400 cursor-pointer active:opacity-50"
-          onClick={handleDetail}
-        >
-          <EyeIcon/>
-        </span>
+          <span
+            className="text-lg text-default-400 cursor-pointer active:opacity-50"
+            onClick={handleDetail}
+          >
+            <EyeIcon />
+          </span>
         </Tooltip>
         <Tooltip content="Delete">
-        <span
-          className="text-lg text-default-400 cursor-pointer active:opacity-50"
-          onClick={handleDelete}
-        >
-          <HiMiniXMark color={"red"}/>
-        </span>
+          <span
+            className="text-lg text-default-400 cursor-pointer active:opacity-50"
+            onClick={handleDelete}
+          >
+            <HiMiniXMark color={"red"} />
+          </span>
         </Tooltip>
       </div>
     )
@@ -316,7 +326,7 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
               <h1 className={'text-3xl font-bold'}>{id === '0' ? 'Create new' : 'Update'} hotel</h1>
               <div>
                 {isLoading ? (
-                  <Loader/>
+                  <Loader />
                 ) : (
                   <div className={'flex flex-col gap-4'}>
                     <Input
@@ -434,11 +444,11 @@ const ManagerDetailHotelPage = ({params}: { params: IParams }) => {
 
                     <div className={'flex gap-4 mt-2 mb-4'}>
                       {id === '0' ? (
-                        <Button label={'Create'} onClick={handleCreate}/>
+                        <Button label={'Create'} onClick={handleCreate} />
                       ) : (
-                        <Button label={'Update'} onClick={handleEdit}/>
+                        <Button label={'Update'} onClick={handleEdit} />
                       )}
-                      <Button label={'Cancel'} onClick={handleCancel}/>
+                      <Button label={'Cancel'} onClick={handleCancel} />
                     </div>
 
                   </div>
